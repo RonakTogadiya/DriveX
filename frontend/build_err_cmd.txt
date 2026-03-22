@@ -1,0 +1,28 @@
+
+> antigravity-rental-frontend@0.0.1 build
+> vite build
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 481 modules transformed.
+[31mx[39m Build failed in 2.90s
+[31merror during build:
+[31msrc/hooks/useMapSearch.js (2:9): "getNearby" is not exported by "src/services/api.js", imported by "src/hooks/useMapSearch.js".[31m
+file: [36mD:/Study/Sem 6/Advance Web Technology/Lab/Project/frontend/src/hooks/useMapSearch.js:2:9[31m
+[33m
+1: import { useState, useEffect, useCallback, useRef } from 'react';
+2: import { getNearby, getListings } from '../services/api';
+            ^
+3: 
+4: /**
+[31m
+    at getRollupError (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at error (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/parseAst.js:398:42)
+    at Module.error (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17040:16)
+    at Module.traceVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17452:29)
+    at ModuleScope.findVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15070:39)
+    at ReturnValueScope.findVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)
+    at FunctionBodyScope.findVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)
+    at ReturnValueScope.findVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)
+    at FunctionBodyScope.findVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)
+    at BlockScope.findVariable (file:///D:/Study/Sem%206/Advance%20Web%20Technology/Lab/Project/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)[39m
