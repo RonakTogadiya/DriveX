@@ -14,7 +14,24 @@ const getListings = async (req, res, next) => {
             page = 1, limit = 10, city,
         } = req.query;
 
-        const query = {};
+        // Start with approved listings only for public search
+        let queryStr = { verificationStatus: 'APPROVED', ...req.query };
+
+        // Fields to exclude from normal filtering
+        const removeFields = ['select', 'sort', 'page', 'limit', 'search', 'startDate', 'endDate'];
+
+        // Loop over removeFields and delete them from queryStr
+        removeFields.forEach(param => delete queryStr[param]);
+
+        // Remove any empty string values from queryStr
+        Object.keys(queryStr).forEach(key => {
+            if (queryStr[key] === '' || queryStr[key] === undefined) {
+                delete queryStr[key];
+            }
+        });
+
+        // Basic filtering (type, fuelType, transmission, city, seats)
+        const query = { ...queryStr };
 
         if (search) {
             query.$text = { $search: search };
@@ -24,6 +41,7 @@ const getListings = async (req, res, next) => {
         if (transmission) query.transmission = transmission;
         if (city) query['location.city'] = { $regex: city, $options: 'i' };
         if (seats) query.seats = { $gte: Number(seats) };
+
 
         if (minPrice || maxPrice) {
             query.pricePerDay = {};
@@ -78,13 +96,13 @@ const getListingById = async (req, res, next) => {
 const createListing = async (req, res, next) => {
     try {
         const {
-            name, type, description, pricePerDay,
+            name, type, description, pricePerDay, weekendPrice,
             brand, model, year, seats, fuelType, transmission, mileage,
             imageUrl, images, location,
         } = req.body;
 
         const listing = await Listing.create({
-            name, type, description, pricePerDay,
+            name, type, description, pricePerDay, weekendPrice,
             brand, model, year,
             seats: seats || 5,
             fuelType: fuelType || 'PETROL',
@@ -146,6 +164,29 @@ const deleteListing = async (req, res, next) => {
 };
 
 /**
+ * @desc    Update vehicle availability (blockedDates)
+ * @route   PUT /api/listings/:id/availability
+ * @access  Private (owner/admin)
+ */
+const updateAvailability = async (req, res, next) => {
+    try {
+        const listing = await Listing.findById(req.params.id);
+        if (!listing) return res.status(404).json({ success: false, message: 'Vehicle not found' });
+
+        const isOwner = listing.owner.toString() === req.user._id.toString();
+        if (!isOwner && req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+
+        listing.blockedDates = req.body.blockedDates || [];
+        await listing.save();
+        res.json({ success: true, data: listing.blockedDates });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
  * @desc    Search vehicles nearby (geospatial)
  * @route   GET /api/listings/nearby
  * @access  Public
@@ -170,4 +211,4 @@ const getNearbyListings = async (req, res, next) => {
     }
 };
 
-module.exports = { getListings, getListingById, createListing, updateListing, deleteListing, getNearbyListings };
+module.exports = { getListings, getListingById, createListing, updateListing, deleteListing, getNearbyListings, updateAvailability };

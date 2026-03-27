@@ -106,12 +106,14 @@ app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
 app.use(express.json());
 
 // --- API Routes ---
-app.use('/api/auth', authRoutes);
-app.use('/api/listings', listingRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/listings', require('./routes/listingRoutes'));
+app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/chat', require('./routes/chatRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 // --- Health Check ---
 app.get('/', (req, res) => {

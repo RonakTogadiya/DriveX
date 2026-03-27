@@ -9,7 +9,7 @@ const TRANSMISSIONS = ['MANUAL', 'AUTOMATIC'];
 const TYPE_ICONS = { CAR: '🚗', BIKE: '🏍️', SUV: '🚙', TRUCK: '🚛', VAN: '🚌', SCOOTER: '🛵' };
 
 const EMPTY_FORM = {
-    name: '', type: 'CAR', description: '', pricePerDay: '',
+    name: '', type: 'CAR', description: '', pricePerDay: '', weekendPrice: '',
     brand: '', model: '', year: new Date().getFullYear(), seats: 5,
     fuelType: 'PETROL', transmission: 'MANUAL', mileage: '',
     imageUrl: '',
@@ -31,7 +31,7 @@ const ListingForm = () => {
                 const { data } = await getListingById(id);
                 const l = data.data;
                 setForm({
-                    name: l.name, type: l.type, description: l.description || '', pricePerDay: l.pricePerDay,
+                    name: l.name, type: l.type, description: l.description || '', pricePerDay: l.pricePerDay, weekendPrice: l.weekendPrice || '',
                     brand: l.brand, model: l.model, year: l.year, seats: l.seats,
                     fuelType: l.fuelType, transmission: l.transmission, mileage: l.mileage || '',
                     imageUrl: l.imageUrl || '',
@@ -59,6 +59,7 @@ const ListingForm = () => {
         const payload = {
             ...form,
             pricePerDay: Number(form.pricePerDay),
+            weekendPrice: form.weekendPrice ? Number(form.weekendPrice) : undefined,
             year: Number(form.year),
             seats: Number(form.seats),
             mileage: Number(form.mileage) || 0,
@@ -165,7 +166,10 @@ const ListingForm = () => {
                     {/* Section 3: Pricing */}
                     <div>
                         <h2 className="text-xs text-blue-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">03 — Pricing</h2>
-                        <InputField label="Price Per Day (₹) *" name="pricePerDay" type="number" min="1" step="1" placeholder="e.g. 2500" required />
+                        <div className="grid grid-cols-2 gap-4">
+                            <InputField label="Standard Price/Day (₹) *" name="pricePerDay" type="number" min="1" step="1" placeholder="e.g. 2500" required />
+                            <InputField label="Weekend Price/Day (₹)" name="weekendPrice" type="number" min="1" step="1" placeholder="Optional (e.g. 3000)" />
+                        </div>
                     </div>
 
                     {/* Section 4: Location */}

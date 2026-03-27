@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getListingById, getListingAvailability, createBooking } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ChatBox from '../components/ChatBox';
+import AvailabilityCalendar from '../components/AvailabilityCalendar';
 import toast from 'react-hot-toast';
 import { format, differenceInCalendarDays } from 'date-fns';
 
@@ -25,11 +26,27 @@ const ListingDetail = () => {
     const [bookingLoading, setBookingLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('details');
     const [activeImage, setActiveImage] = useState(0);
+    const [bookedDates, setBookedDates] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
     const totalDays = startDate && endDate ? differenceInCalendarDays(new Date(endDate), new Date(startDate)) : 0;
-    const totalCost = totalDays > 0 ? totalDays * (listing?.pricePerDay || 0) : 0;
+    
+    let totalCost = 0;
+    if (totalDays > 0 && listing) {
+        const wp = listing.weekendPrice > 0 ? listing.weekendPrice : listing.pricePerDay;
+        const current = new Date(startDate);
+        current.setHours(0,0,0,0);
+        for (let i = 0; i < totalDays; i++) {
+            const dayOfWeek = current.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                totalCost += wp;
+            } else {
+                totalCost += listing.pricePerDay;
+            }
+            current.setDate(current.getDate() + 1);
+        }
+    }
 
     useEffect(() => {
         const fetch = async () => {
@@ -37,6 +54,7 @@ const ListingDetail = () => {
             try {
                 const [listRes, availRes] = await Promise.all([getListingById(id), getListingAvailability(id)]);
                 setListing(listRes.data.data);
+                setBookedDates(availRes.data.data);
             } catch {
                 toast.error('Failed to load vehicle'); navigate('/listings');
             } finally { setLoading(false); }
@@ -74,7 +92,9 @@ const ListingDetail = () => {
     if (!listing) return null;
 
     const images = listing.images?.length > 0 ? listing.images : listing.imageUrl ? [listing.imageUrl] : [];
-    const tabs = [{ key: 'details', label: 'Details' }, { key: 'specs', label: 'Specs' }, { key: 'chat', label: '💬 Chat Owner' }];
+    const tabs = [{ key: 'details', label: 'Details' }, { key: 'specs', label: 'Specs' }, { key: 'availability', label: '📅 Availability' }, { key: 'chat', label: '💬 Chat' }];
+    
+    const isOwner = user && listing.owner?._id === user._id;
 
     return (
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
@@ -139,6 +159,11 @@ const ListingDetail = () => {
                                 <div className="text-right flex-shrink-0">
                                     <p className="text-blue-600 font-bold text-2xl">₹{listing.pricePerDay?.toLocaleString()}</p>
                                     <p className="text-slate-400 text-xs">per day</p>
+                                    {listing.weekendPrice > 0 && (
+                                        <p className="text-amber-500 font-bold text-xs mt-1">
+                                            ₹{listing.weekendPrice.toLocaleString()} <span className="font-normal text-slate-400">on weekends</span>
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <div className="flex flex-wrap gap-2">
@@ -210,6 +235,14 @@ const ListingDetail = () => {
                                     ))}
                                 </div>
                             </div>
+                        )}
+
+                        {activeTab === 'availability' && (
+                            <AvailabilityCalendar 
+                                listingId={id} 
+                                isOwner={isOwner} 
+                                initialBookedStatus={bookedDates} 
+                            />
                         )}
 
                         {activeTab === 'chat' && (

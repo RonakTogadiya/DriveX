@@ -20,6 +20,8 @@ const BookingSchema = new mongoose.Schema(
         pricePerDay: { type: Number, required: true },
         totalDays: { type: Number, required: true },
         totalCost: { type: Number, required: true },
+        depositPaid: { type: Boolean, default: false },
+        rentalPaid: { type: Boolean, default: false },
 
         // ── Status ────────────────────────────────────────────────────────
         status: {

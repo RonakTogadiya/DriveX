@@ -38,6 +38,45 @@ router.put('/profile', protect, async (req, res, next) => {
 });
 
 /**
+ * @desc    Get user's wishlist
+ * @route   GET /api/users/wishlist
+ * @access  Private
+ */
+router.get('/wishlist', protect, async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id).populate('wishlist', 'name type brand model imageUrl pricePerDay location owner averageRating');
+        res.json({ success: true, count: user.wishlist.length, data: user.wishlist });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @desc    Toggle wishlist item
+ * @route   POST /api/users/wishlist/:listingId
+ * @access  Private
+ */
+router.post('/wishlist/:listingId', protect, async (req, res, next) => {
+    try {
+        const { listingId } = req.params;
+        const user = await User.findById(req.user._id);
+        
+        const isWishlisted = user.wishlist.includes(listingId);
+        
+        if (isWishlisted) {
+            user.wishlist = user.wishlist.filter(id => id.toString() !== listingId);
+        } else {
+            user.wishlist.push(listingId);
+        }
+        
+        await user.save();
+        res.json({ success: true, message: isWishlisted ? 'Removed from wishlist' : 'Added to wishlist', data: user.wishlist });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
  * @desc    Get all users (admin only)
  * @route   GET /api/users
  * @access  Private/Admin

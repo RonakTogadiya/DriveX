@@ -3,7 +3,7 @@
  * Populates MongoDB with users, vehicle listings, and bookings (booked + available)
  * Run: node backend/seed.js
  */
-require('dotenv').config();
+require('dotenv').config({ path: __dirname + '/.env' });
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Listing = require('./models/Listing');
@@ -172,9 +172,11 @@ async function seed() {
         for (const u of USERS) {
             let user = await User.findOne({ email: u.email });
             if (!user) {
-                user = await User.create(u);
+                user = await User.create({ ...u, isVerified: true });
                 console.log(`👤 Created ${u.role}: ${u.username} (${u.email}) | password: DriveX@123`);
             } else {
+                user.isVerified = true;
+                await user.save();
                 console.log(`👤 Found existing user: ${u.username}`);
             }
             createdUsers.push(user);
@@ -187,7 +189,11 @@ async function seed() {
         const createdListings = [];
         for (let i = 0; i < VEHICLES.length; i++) {
             const owner = i % 2 === 0 ? owner1 : owner2;
-            const listing = await Listing.create({ ...VEHICLES[i], owner: owner._id });
+            const listing = await Listing.create({ 
+                ...VEHICLES[i], 
+                owner: owner._id,
+                verificationStatus: 'APPROVED' 
+            });
             createdListings.push(listing);
             const tag = listing.isAvailable ? '🟢 Available' : '🔴 Booked';
             console.log(`🚗 ${tag} | ${listing.name} — ₹${listing.pricePerDay}/day (${listing.location.city})`);

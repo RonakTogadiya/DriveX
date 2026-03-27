@@ -12,23 +12,34 @@ const UserSchema = new mongoose.Schema(
             unique: true, lowercase: true, trim: true,
             match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
         },
-        passwordHash: { type: String, required: true, select: false },
+        // ── Auth & Role ───────────────────────────────────────────────────
+        password: {
+            type: String,
+            required: [true, 'Password is required'],
+            minlength: 6,
+            select: false,
+        },
+        role: {
+            type: String,
+            enum: ['renter', 'owner', 'admin'],
+            default: 'renter',
+        },
+        isBlocked: { type: Boolean, default: false },
 
-        role: { type: String, enum: ['renter', 'owner', 'admin'], default: 'renter' },
-
-        // Driver details
+        // ── Profile details ───────────────────────────────────────────────
         phone: { type: String, trim: true },
-        licenseNumber: { type: String, trim: true },
-        licenseType: { type: String, enum: ['STANDARD', 'COMMERCIAL'], default: 'STANDARD' },
-
-        // Profile
-        profilePicture: { type: String },
+        address: { type: String, trim: true },
+        avatar: { type: String },
         bio: { type: String },
-        isVerified: { type: Boolean, default: false },
 
+        // ── Verification ──────────────────────────────────────────────────
+        isVerified: { type: Boolean, default: false },
         // Stats
         totalRentals: { type: Number, default: 0 },
         totalDaysRented: { type: Number, default: 0 },
+
+        // Wishlist
+        wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Listing' }],
     },
     { timestamps: true }
 );

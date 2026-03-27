@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const fuelBadge = {
     PETROL: 'bg-orange-50 text-orange-600 border-orange-200',
@@ -15,11 +17,30 @@ const typeIcon = {
 
 const VehicleCard = ({ listing }) => {
     const navigate = useNavigate();
+    const { user, setUser } = useAuth();
+    
+    // Check if listing is in user's wishlist
+    const isWishlisted = user?.wishlist?.some(id => 
+        id === listing._id || (typeof id === 'object' && id._id === listing._id)
+    );
+
+    const toggleWishlist = async (e) => {
+        e.stopPropagation();
+        if (!user) return navigate('/login');
+        try {
+            const { data } = await axios.post(`/users/wishlist/${listing._id}`);
+            if (data.success) {
+                setUser({ ...user, wishlist: data.data });
+            }
+        } catch (err) {
+            console.error('Failed to toggle wishlist:', err);
+        }
+    };
 
     return (
         <div
             className="bg-white rounded-xl border border-gray-200 overflow-hidden cursor-pointer
-                       transition-all duration-200 hover:-translate-y-1 hover:shadow-lg group"
+                       transition-all duration-200 hover:-translate-y-1 hover:shadow-lg group relative"
             onClick={() => navigate(`/listings/${listing._id}`)}
         >
             {/* ── Image ─────────────────────────────────────────────── */}
@@ -48,6 +69,17 @@ const VehicleCard = ({ listing }) => {
                          px-2 py-1 rounded-full border ${fuelBadge[listing.fuelType] || fuelBadge.PETROL}`}>
                     {listing.fuelType}
                 </div>
+
+                {/* Wishlist Heart */}
+                <button 
+                    onClick={toggleWishlist}
+                    className="absolute bottom-2.5 right-2.5 p-2 bg-white/80 hover:bg-white backdrop-blur-sm rounded-full shadow-sm transition-all active:scale-95 text-xl"
+                    title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                    <span className={isWishlisted ? "text-red-500" : "text-gray-400"}>
+                        {isWishlisted ? '❤️' : '🤍'}
+                    </span>
+                </button>
             </div>
 
             {/* ── Card Body ─────────────────────────────────────────── */}

@@ -11,11 +11,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ListingDetail from './pages/ListingDetail';
 import Dashboard from './pages/Dashboard';
+import OwnerDashboard from './pages/OwnerDashboard';
 import MapSearch from './pages/MapSearch';
 import ListingForm from './pages/ListingForm';
 import MyListings from './pages/MyListings';
 import AdminPanel from './pages/AdminPanel';
 import Inbox from './pages/Inbox';
+import WishlistPage from './pages/WishlistPage';
+import PaymentPage from './pages/PaymentPage';
 
 // ── Route Guards ───────────────────────────────────────────────────────
 const ProtectedRoute = ({ children, role }) => {
@@ -53,8 +56,11 @@ const AppRoutes = () => (
             {/* Protected: any logged-in user */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
+            <Route path="/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+            <Route path="/payment/:bookingId" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
 
             {/* Protected: Owner */}
+            <Route path="/owner-dashboard" element={<ProtectedRoute role="owner"><OwnerDashboard /></ProtectedRoute>} />
             <Route path="/my-listings" element={<ProtectedRoute role="owner"><MyListings /></ProtectedRoute>} />
             <Route path="/listings/new" element={<ProtectedRoute role="owner"><ListingForm /></ProtectedRoute>} />
             <Route path="/listings/edit/:id" element={<ProtectedRoute role="owner"><ListingForm /></ProtectedRoute>} />

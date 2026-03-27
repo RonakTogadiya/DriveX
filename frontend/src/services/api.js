@@ -26,14 +26,34 @@ export const getNearbyListings = (params) => api.get('/listings/nearby', { param
 // ── Bookings ──────────────────────────────────────────────────────────
 export const createBooking = (data) => api.post('/bookings', data);
 export const getMyBookings = () => api.get('/bookings/my-bookings');
+export const getOwnerBookings = () => api.get('/bookings/owner-bookings');
 export const getBookingById = (id) => api.get(`/bookings/${id}`);
 export const cancelBooking = (id, reason) => api.patch(`/bookings/${id}/cancel`, { reason });
 export const confirmBooking = (id) => api.patch(`/bookings/${id}/confirm`);
+export const rejectBooking = (id, reason) => api.patch(`/bookings/${id}/reject`, { reason });
+export const downloadReceipt = (id) => api.get(`/bookings/${id}/receipt`, { responseType: 'blob' });
 export const getListingAvailability = (listingId) => api.get(`/bookings/availability/${listingId}`);
+export const updateListingAvailability = (listingId, blockedDates) => api.put(`/listings/${listingId}/availability`, { blockedDates });
+
+// ── Payments ──────────────────────────────────────────────────────────
+export const generatePaymentQR = (bookingId, type) => api.get(`/payments/qr/${bookingId}/${type}`);
+export const verifyPayment = (bookingId, data) => api.post(`/payments/verify/${bookingId}`, data);
 
 // ── Users ─────────────────────────────────────────────────────────────
 export const getMyProfile = () => api.get('/users/profile');
 export const updateMyProfile = (data) => api.put('/users/profile', data);
+export const getWishlist = () => api.get('/users/wishlist');
+export const toggleWishlist = (listingId) => api.post(`/users/wishlist/${listingId}`);
+
+// ── Admin ─────────────────────────────────────────────────────────────
+export const getAdminStats = () => api.get('/admin/stats');
+export const getAllUsers = () => api.get('/admin/users');
+export const toggleBlockUser = (id) => api.patch(`/admin/users/${id}/block`);
+export const verifyUser = (id) => api.patch(`/admin/users/${id}/verify`);
+export const getAllListings = () => api.get('/admin/listings');
+export const verifyListing = (id, status) => api.patch(`/admin/listings/${id}/verify`, { status });
+export const getAllBookings = () => api.get('/admin/bookings');
+export const getAllPayments = () => api.get('/admin/payments');
 
 // ── Notifications ─────────────────────────────────────────────────────
 export const getNotifications = () => api.get('/notifications');

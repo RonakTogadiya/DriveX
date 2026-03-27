@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getMyBookings } from '../services/api';
-import { format } from 'date-fns';
+import { getMyBookings, cancelBooking, downloadReceipt } from '../services/api';
+import { format, isFuture } from 'date-fns';
 
 const STATUS_CONFIG = {
     PENDING: { color: 'bg-yellow-50 text-yellow-700 border-yellow-200', label: 'Pending' },
@@ -17,6 +17,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [cancelModal, setCancelModal] = useState({ isOpen: false, bookingId: null, reason: '', loading: false });
 
     useEffect(() => {
         if (!user) { navigate('/login'); return; }
@@ -29,6 +30,26 @@ const Dashboard = () => {
         };
         fetch();
     }, [user, navigate]);
+
+    const handleCancelClick = (bookingId) => {
+        setCancelModal({ isOpen: true, bookingId, reason: '', loading: false });
+    };
+
+    const confirmCancel = async () => {
+        if (!cancelModal.bookingId) return;
+        setCancelModal(prev => ({ ...prev, loading: true }));
+        try {
+            await cancelBooking(cancelModal.bookingId, cancelModal.reason);
+            setBookings(prev => prev.map(b => 
+                b._id === cancelModal.bookingId ? { ...b, status: 'CANCELLED' } : b
+            ));
+            setCancelModal({ isOpen: false, bookingId: null, reason: '', loading: false });
+        } catch (err) {
+            console.error(err);
+            setCancelModal(prev => ({ ...prev, loading: false }));
+            alert('Failed to cancel booking. Please try again later.');
+        }
+    };
 
     const totalSpent = bookings.filter(b => !['CANCELLED'].includes(b.status)).reduce((s, b) => s + (b.totalCost || 0), 0);
     const totalDays = bookings.filter(b => !['CANCELLED'].includes(b.status)).reduce((s, b) => s + (b.totalDays || 0), 0);
@@ -88,16 +109,17 @@ const Dashboard = () => {
                         </div>
                     ) : (
                         <div>
-                            <div className="hidden md:grid grid-cols-[1fr_120px_160px_100px_100px] gap-4 px-5 py-3 border-b border-gray-100">
-                                {['Vehicle', 'Status', 'Dates', 'Days', 'Total'].map(h => (
+                            <div className="hidden md:grid grid-cols-[1fr_120px_160px_100px_100px_80px] gap-4 px-5 py-3 border-b border-gray-100">
+                                {['Vehicle', 'Status', 'Dates', 'Days', 'Total', 'Actions'].map(h => (
                                     <span key={h} className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{h}</span>
                                 ))}
                             </div>
                             {bookings.map((booking, idx) => {
                                 const status = STATUS_CONFIG[booking.status] || STATUS_CONFIG.PENDING;
+                                const canCancel = ['PENDING', 'CONFIRMED'].includes(booking.status) && isFuture(new Date(booking.startDate));
                                 return (
                                     <div key={booking._id}
-                                        className={`grid grid-cols-1 md:grid-cols-[1fr_120px_160px_100px_100px] gap-3 md:gap-4 px-5 py-4 items-center
+                                        className={`grid grid-cols-1 md:grid-cols-[1fr_120px_160px_100px_100px_80px] gap-3 md:gap-4 px-5 py-4 items-center
                       ${idx % 2 === 0 ? '' : 'bg-slate-50/50'}
                       hover:bg-blue-50/40 transition-colors duration-150`}>
                                         <div className="flex items-center gap-3 min-w-0">
@@ -118,7 +140,45 @@ const Dashboard = () => {
                                             {booking.endDate ? format(new Date(booking.endDate), 'dd MMM yy') : '—'}
                                         </div>
                                         <span className="text-slate-500 text-sm">{booking.totalDays} days</span>
-                                        <span className="text-blue-600 font-bold text-sm">₹{booking.totalCost?.toLocaleString()}</span>
+                                        <span className="text-blue-600 font-bold text-sm flex flex-col items-end">
+                                            ₹{booking.totalCost?.toLocaleString()}
+                                            {(booking.status === 'CONFIRMED' || booking.status === 'ACTIVE') && (
+                                                <div className="flex flex-col gap-1 mt-2 items-end">
+                                                    {!booking.depositPaid && (
+                                                        <button 
+                                                            onClick={() => navigate(`/payment/${booking._id}?type=DEPOSIT`)}
+                                                            className="text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-white px-2 py-1 rounded"
+                                                        >
+                                                            Pay Deposit
+                                                        </button>
+                                                    )}
+                                                    {booking.depositPaid && !booking.rentalPaid && (
+                                                        <button 
+                                                            onClick={() => navigate(`/payment/${booking._id}?type=RENTAL`)}
+                                                            className="text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white px-2 py-1 rounded"
+                                                        >
+                                                            Pay Rental
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </span>
+                                        <div className="flex flex-col gap-1 items-end">
+                                            {canCancel && (
+                                                <button 
+                                                    onClick={() => handleCancelClick(booking._id)}
+                                                    className="px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-bold uppercase tracking-wider rounded-md transition-colors border border-red-200 mt-1 w-full"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            )}
+                                            <button 
+                                                onClick={() => handleDownloadReceipt(booking._id)}
+                                                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-md transition-colors border border-slate-200 mt-1 w-full"
+                                            >
+                                                Receipt
+                                            </button>
+                                        </div>
                                     </div>
                                 );
                             })}
@@ -126,6 +186,40 @@ const Dashboard = () => {
                     )}
                 </div>
             </div>
+
+            {/* Cancel Modal */}
+            {cancelModal.isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl relative">
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Cancel Booking</h3>
+                        <p className="text-slate-500 text-sm mb-4">Are you sure you want to cancel this booking? This action cannot be undone.</p>
+                        
+                        <textarea 
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm mb-6 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            rows="3"
+                            placeholder="Reason for cancellation (optional)"
+                            value={cancelModal.reason}
+                            onChange={(e) => setCancelModal(prev => ({ ...prev, reason: e.target.value }))}
+                        />
+
+                        <div className="flex gap-3 justify-end">
+                            <button 
+                                onClick={() => setCancelModal({ isOpen: false, bookingId: null, reason: '', loading: false })}
+                                className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                            >
+                                No, Go Back
+                            </button>
+                            <button 
+                                onClick={confirmCancel}
+                                disabled={cancelModal.loading}
+                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                            >
+                                {cancelModal.loading ? 'Cancelling...' : 'Yes, Cancel'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

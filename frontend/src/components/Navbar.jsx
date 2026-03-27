@@ -147,7 +147,9 @@ const Navbar = () => {
 
                                         <div className="py-2">
                                             {[
-                                                { to: '/dashboard', label: 'Dashboard', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' },
+                                                { to: '/dashboard', label: 'My Trips', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' },
+                                                user.role === 'owner' && { to: '/owner-dashboard', label: 'Owner Dashboard', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+                                                { to: '/wishlist', label: 'My Wishlist', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
                                                 { to: '/inbox', label: 'Messages', icon: 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z' },
                                                 user.role === 'owner' && { to: '/my-listings', label: 'My Vehicles', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
                                                 user.role === 'owner' && { to: '/listings/new', label: 'List a Vehicle', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' },
@@ -197,6 +199,13 @@ const Navbar = () => {
                     {navLinks.map(({ to, label }) => (
                         <Link key={to} to={to} className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">{label}</Link>
                     ))}
+                    {user && (
+                        <>
+                            <Link to="/dashboard" className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">My Trips</Link>
+                            {user.role === 'owner' && <Link to="/owner-dashboard" className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">Owner Dashboard</Link>}
+                            <Link to="/wishlist" className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">My Wishlist</Link>
+                        </>
+                    )}
                     {!user
                         ? <div className="flex flex-col gap-2 mt-2 pt-4 border-t border-slate-100">
                             <Link to="/login" className="bg-slate-50 border border-slate-200 text-center font-medium text-slate-700 text-sm px-4 py-2.5 rounded-xl">Login</Link>

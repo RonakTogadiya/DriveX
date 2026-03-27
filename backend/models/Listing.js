@@ -9,10 +9,11 @@ const VehicleSchema = new mongoose.Schema(
             enum: ['CAR', 'BIKE', 'SUV', 'TRUCK', 'VAN', 'SCOOTER'],
             required: true,
         },
-        description: { type: String, trim: true, default: '' },
 
-        // ── Pricing ───────────────────────────────────────────────────────
+        // ── Description & Pricing ─────────────────────────────────────────
+        description: { type: String, trim: true, default: '' },
         pricePerDay: { type: Number, required: [true, 'Price per day is required'], min: 0 },
+        weekendPrice: { type: Number, min: 0 },
 
         // ── Vehicle Specs ─────────────────────────────────────────────────
         brand: { type: String, required: true, trim: true },
@@ -30,6 +31,16 @@ const VehicleSchema = new mongoose.Schema(
         // ── Owner & Availability ──────────────────────────────────────────
         owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         isAvailable: { type: Boolean, default: true },
+        blockedDates: [{ type: Date }],
+
+        // ── Status & Availability ─────────────────────────────────────────
+        isAvailable: { type: Boolean, default: true },
+        blockedDates: [{ type: Date }],
+        verificationStatus: {
+            type: String,
+            enum: ['PENDING', 'APPROVED', 'REJECTED'],
+            default: 'PENDING'
+        },
 
         // ── Media ─────────────────────────────────────────────────────────
         imageUrl: { type: String },
