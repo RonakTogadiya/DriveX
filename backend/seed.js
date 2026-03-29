@@ -17,6 +17,7 @@ const MONGO_OPTIONS = {
 
 // ── Test Users ─────────────────────────────────────────────────────────
 const USERS = [
+    { username: 'adminuser', email: 'admin@drivex.com', passwordHash: 'Admin@123', password: 'Admin@123', role: 'admin', phone: '0000000000' },
     { username: 'rahulsharma', email: 'rahul@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'owner', phone: '9876543210' },
     { username: 'priyajoshi', email: 'priya@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'owner', phone: '9876543211' },
     { username: 'amitmehta', email: 'amit@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543212' },
@@ -176,7 +177,7 @@ async function seed() {
             createdUsers.push(user);
         }
 
-        const [owner1, owner2, renter1, renter2, renter3] = createdUsers;
+        const [admin1, owner1, owner2, renter1, renter2, renter3] = createdUsers;
         console.log('');
 
         // ── Create Vehicle Listings ──────────────────────────────────────
@@ -309,8 +310,9 @@ async function seed() {
         console.log('📊 Summary:');
         console.log(`   🚗 ${VEHICLES.length} vehicles (${VEHICLES.filter(v => v.isAvailable).length} available, ${VEHICLES.filter(v => !v.isAvailable).length} booked)`);
         console.log(`   📋 ${bookings.length} bookings (2 ACTIVE, 1 CONFIRMED, 2 COMPLETED, 1 CANCELLED, 1 PENDING)`);
-        console.log(`   👤 ${USERS.length} users (2 owners, 3 renters)\n`);
+        console.log(`   👤 ${USERS.length} users (1 admin, 2 owners, 3 renters)\n`);
         console.log('🔑 Test Login Credentials:');
+        console.log('   Admin:  admin@drivex.com  / Admin@123');
         console.log('   Owner:  rahul@drivex.com  / DriveX@123');
         console.log('   Owner:  priya@drivex.com  / DriveX@123');
         console.log('   Renter: amit@drivex.com   / DriveX@123');
