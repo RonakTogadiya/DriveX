@@ -17,11 +17,11 @@ const MONGO_OPTIONS = {
 
 // ── Test Users ─────────────────────────────────────────────────────────
 const USERS = [
-    { username: 'rahulsharma', email: 'rahul@drivex.com', passwordHash: 'DriveX@123', role: 'owner', phone: '9876543210' },
-    { username: 'priyajoshi', email: 'priya@drivex.com', passwordHash: 'DriveX@123', role: 'owner', phone: '9876543211' },
-    { username: 'amitmehta', email: 'amit@drivex.com', passwordHash: 'DriveX@123', role: 'renter', phone: '9876543212' },
-    { username: 'snehaverma', email: 'sneha@drivex.com', passwordHash: 'DriveX@123', role: 'renter', phone: '9876543213' },
-    { username: 'vikramaditya', email: 'vikram@drivex.com', passwordHash: 'DriveX@123', role: 'renter', phone: '9876543214' },
+    { username: 'rahulsharma', email: 'rahul@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'owner', phone: '9876543210' },
+    { username: 'priyajoshi', email: 'priya@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'owner', phone: '9876543211' },
+    { username: 'amitmehta', email: 'amit@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543212' },
+    { username: 'snehaverma', email: 'sneha@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543213' },
+    { username: 'vikramaditya', email: 'vikram@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543214' },
 ];
 
 // ── Vehicle Listings ───────────────────────────────────────────────────
