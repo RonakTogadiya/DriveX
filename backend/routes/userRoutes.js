@@ -90,31 +90,4 @@ router.get('/', protect, authorize('admin'), async (req, res, next) => {
     }
 });
 
-/**
- * @desc    Update a user's gravityClearance (admin only)
- * @route   PATCH /api/users/:id/clearance
- * @access  Private/Admin
- */
-router.patch('/:id/clearance', protect, authorize('admin'), async (req, res, next) => {
-    try {
-        const { gravityClearance } = req.body;
-        const validLevels = ['CIVILIAN', 'PILOT', 'COMMANDER', 'ADMIN'];
-        if (!validLevels.includes(gravityClearance)) {
-            return res.status(400).json({ success: false, message: 'Invalid clearance level' });
-        }
-
-        const user = await User.findByIdAndUpdate(
-            req.params.id,
-            { gravityClearance },
-            { new: true }
-        ).select('-passwordHash');
-
-        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
-
-        res.json({ success: true, message: `Clearance updated to ${gravityClearance}`, data: user });
-    } catch (error) {
-        next(error);
-    }
-});
-
 module.exports = router;

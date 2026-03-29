@@ -137,7 +137,7 @@ const getOwnerBookings = async (req, res, next) => {
 
         const bookings = await Booking.find({ listing: { $in: listingIds } })
             .populate('listing', 'name brand model pricePerDay imageUrl')
-            .populate('renter', 'username email phone licenseType')
+            .populate('renter', 'username email phone')
             .sort({ createdAt: -1 });
 
         res.json({ success: true, count: bookings.length, data: bookings });
@@ -155,7 +155,7 @@ const getBookingById = async (req, res, next) => {
     try {
         const booking = await Booking.findById(req.params.id)
             .populate('listing', 'name type brand model imageUrl pricePerDay location owner')
-            .populate('renter', 'username email phone licenseType');
+            .populate('renter', 'username email phone');
 
         if (!booking) {
             return res.status(404).json({ success: false, message: 'Booking not found' });

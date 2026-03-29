@@ -8,7 +8,7 @@ const generateToken = require('../utils/generateToken');
  */
 const registerUser = async (req, res, next) => {
     try {
-        const { username, email, password, role, phone, licenseType } = req.body;
+        const { username, email, password, role, phone } = req.body;
 
         if (!username || !email || !password) {
             return res.status(400).json({ success: false, message: 'Please provide username, email, and password' });
@@ -22,16 +22,12 @@ const registerUser = async (req, res, next) => {
             });
         }
 
-        // License type based on role
-        const assignedLicenseType = role === 'owner' ? 'COMMERCIAL' : (licenseType || 'STANDARD');
-
         const user = await User.create({
             username,
             email,
             passwordHash: password,
             role: role || 'renter',
             phone: phone || '',
-            licenseType: assignedLicenseType,
         });
 
         const token = generateToken(user._id);
@@ -43,7 +39,6 @@ const registerUser = async (req, res, next) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                licenseType: user.licenseType,
                 totalRentals: user.totalRentals,
                 token,
             },
@@ -79,7 +74,6 @@ const loginUser = async (req, res, next) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                licenseType: user.licenseType,
                 totalRentals: user.totalRentals,
                 token,
             },

@@ -17,8 +17,8 @@ const getListings = async (req, res, next) => {
         // Start with approved listings only for public search
         let queryStr = { verificationStatus: 'APPROVED', ...req.query };
 
-        // Fields to exclude from normal filtering
-        const removeFields = ['select', 'sort', 'page', 'limit', 'search', 'startDate', 'endDate'];
+        // Fields to exclude from normal filtering (they are handled explicitly below)
+        const removeFields = ['select', 'sort', 'order', 'page', 'limit', 'search', 'startDate', 'endDate', 'type', 'fuelType', 'transmission', 'city', 'seats', 'minPrice', 'maxPrice'];
 
         // Loop over removeFields and delete them from queryStr
         removeFields.forEach(param => delete queryStr[param]);
@@ -56,7 +56,7 @@ const getListings = async (req, res, next) => {
         const total = await Listing.countDocuments(query);
 
         const listings = await Listing.find(query)
-            .populate('owner', 'username email licenseType')
+            .populate('owner', 'username email')
             .sort(sortOptions)
             .skip(skip)
             .limit(Number(limit));
@@ -80,7 +80,7 @@ const getListings = async (req, res, next) => {
  */
 const getListingById = async (req, res, next) => {
     try {
-        const listing = await Listing.findById(req.params.id).populate('owner', 'username email licenseType');
+        const listing = await Listing.findById(req.params.id).populate('owner', 'username email');
         if (!listing) return res.status(404).json({ success: false, message: 'Vehicle not found' });
         res.json({ success: true, data: listing });
     } catch (error) {

@@ -97,25 +97,4 @@ body {
         #E2E8F0 50%,
         #F1F5F9 100%);
   }
-
-  /* Status badges */
-  .badge-civilian {
-    @apply bg-green-50 text-green-700 border border-green-200;
-  }
-
-  .badge-pilot {
-    @apply bg-blue-50 text-blue-700 border border-blue-200;
-  }
-
-  .badge-commander {
-    @apply bg-violet-50 text-violet-700 border border-violet-200;
-  }
-
-  .badge-admin {
-    @apply bg-red-50 text-red-700 border border-red-200;
-  }
-
-  .clearance-badge {
-    @apply text-[9px] font-bold uppercase tracking-[0.12em] px-2 py-0.5 rounded-full;
-  }
-}
+}

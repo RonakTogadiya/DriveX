@@ -68,6 +68,15 @@ const AppRoutes = () => (
             {/* Protected: Admin */}
             <Route path="/admin" element={<ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute>} />
 
+            {/* Aliases / Redirects for common typos or legacy URLs */}
+            <Route path="/ownerdashboard" element={<Navigate to="/owner-dashboard" replace />} />
+            <Route path="/Ownerdashboard" element={<Navigate to="/owner-dashboard" replace />} />
+            <Route path="/mywishlist" element={<Navigate to="/wishlist" replace />} />
+            <Route path="/my-wishlist" element={<Navigate to="/wishlist" replace />} />
+            <Route path="/Mywishlist" element={<Navigate to="/wishlist" replace />} />
+            <Route path="/adminpanel" element={<Navigate to="/admin" replace />} />
+            <Route path="/mylistings" element={<Navigate to="/my-listings" replace />} />
+
             {/* 404 */}
             <Route path="*" element={<PlaceholderPage title="404 — Page Not Found" />} />
         </Routes>

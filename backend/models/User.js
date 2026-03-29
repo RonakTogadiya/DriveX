@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
             match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
         },
         // ── Auth & Role ───────────────────────────────────────────────────
-        password: {
+        passwordHash: {
             type: String,
             required: [true, 'Password is required'],
             minlength: 6,

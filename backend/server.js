@@ -102,6 +102,9 @@ io.on('connection', (socket) => {
 });
 
 // --- Middlewares ---
+// Razorpay webhook needs raw body for signature verification — mount BEFORE express.json()
+app.use('/api/payments/webhook', express.raw({ type: 'application/json' }), require('./routes/paymentRoutes'));
+
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
 app.use(express.json());
 
@@ -117,7 +120,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 
 // --- Health Check ---
 app.get('/', (req, res) => {
-    res.json({ message: '🚀 Antigravity Rental Platform API is live!' });
+    res.json({ message: '🚀 DriveX Car Rental Platform API is live!' });
 });
 
 // --- Global Error Handler ---

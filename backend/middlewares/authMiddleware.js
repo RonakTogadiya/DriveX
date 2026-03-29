@@ -55,26 +55,4 @@ const authorize = (...roles) => {
     };
 };
 
-/**
- * Middleware: checkGravityClearance
- * Sci-fi themed clearance check.
- * Compares user's gravityClearance against the listing's requiredClearance.
- */
-const CLEARANCE_LEVELS = { CIVILIAN: 1, PILOT: 2, COMMANDER: 3, ADMIN: 4 };
-
-const checkGravityClearance = (requiredLevel) => {
-    return (req, res, next) => {
-        const userLevel = CLEARANCE_LEVELS[req.user.gravityClearance] || 0;
-        const required = CLEARANCE_LEVELS[requiredLevel] || 0;
-
-        if (userLevel < required) {
-            return res.status(403).json({
-                success: false,
-                message: `⚠️ GRAVITY CLEARANCE DENIED. Required: ${requiredLevel}. Your Level: ${req.user.gravityClearance}.`,
-            });
-        }
-        next();
-    };
-};
-
-module.exports = { protect, authorize, checkGravityClearance, CLEARANCE_LEVELS };
+module.exports = { protect, authorize };

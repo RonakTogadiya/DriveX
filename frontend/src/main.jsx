@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -18,6 +18,9 @@ import Inbox from './pages/Inbox';
 // ── Lazy-load heavy pages (Leaflet + Chart.js) to prevent synchronous crash ──
 const MapSearch = lazy(() => import('./pages/MapSearch'));
 const AdminPanel = lazy(() => import('./pages/AdminPanel'));
+const OwnerDashboard = lazy(() => import('./pages/OwnerDashboard'));
+const WishlistPage = lazy(() => import('./pages/WishlistPage'));
+const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 
 const ProtectedRoute = ({ children, role }) => {
     const { user, loading } = useAuth();
@@ -26,8 +29,8 @@ const ProtectedRoute = ({ children, role }) => {
             <span className="text-neon font-orbitron text-sm animate-pulse">Authenticating...</span>
         </div>
     );
-    if (!user) return <a href="/login" />;
-    if (role && user.role !== role) return <a href="/dashboard" />;
+    if (!user) return <Navigate to="/login" replace />;
+    if (role && user.role !== role) return <Navigate to="/dashboard" replace />;
     return children;
 };
 
@@ -71,6 +74,20 @@ function App() {
                             <Route path="/listings/new" element={<ProtectedRoute role="owner"><ListingForm /></ProtectedRoute>} />
                             <Route path="/listings/edit/:id" element={<ProtectedRoute role="owner"><ListingForm /></ProtectedRoute>} />
                             <Route path="/admin" element={<ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute>} />
+                            
+                            <Route path="/owner-dashboard" element={<ProtectedRoute role="owner"><OwnerDashboard /></ProtectedRoute>} />
+                            <Route path="/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+                            <Route path="/payment/:bookingId" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
+
+                            {/* Aliases for common typos or older URLs */}
+                            <Route path="/ownerdashboard" element={<Navigate to="/owner-dashboard" replace />} />
+                            <Route path="/Ownerdashboard" element={<Navigate to="/owner-dashboard" replace />} />
+                            <Route path="/mywishlist" element={<Navigate to="/wishlist" replace />} />
+                            <Route path="/my-wishlist" element={<Navigate to="/wishlist" replace />} />
+                            <Route path="/Mywishlist" element={<Navigate to="/wishlist" replace />} />
+                            <Route path="/adminpanel" element={<Navigate to="/admin" replace />} />
+                            <Route path="/mylistings" element={<Navigate to="/my-listings" replace />} />
+
                             <Route path="*" element={<PlaceholderPage title="404 — Page Not Found" />} />
                         </Routes>
                     </Suspense>

@@ -1,7 +1,7 @@
 {
-  "name": "antigravity-rental-backend",
+  "name": "drivex-rental-backend",
   "version": "1.0.0",
-  "description": "Antigravity MERN Rental Platform - Backend API",
+  "description": "DriveX MERN Car Rental Platform - Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -16,6 +16,7 @@
     "mongoose": "^8.4.0",
     "pdfkit": "^0.18.0",
     "qrcode": "^1.5.4",
+    "razorpay": "^2.9.6",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {

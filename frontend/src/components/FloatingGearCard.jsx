@@ -1,41 +1,39 @@
 import React from 'react';
 
-// Clearance badge color mapping
-const clearanceBadgeClass = {
-    CIVILIAN: 'badge-civilian',
-    PILOT: 'badge-pilot',
-    COMMANDER: 'badge-commander',
-    ADMIN: 'badge-admin',
-};
-
-// Gear type icon mapping (emoji as fallback — swap with SVG icons in production)
-const gearTypeIcon = {
-    HOVERBOARD: '🛹',
-    GRAVITY_SUIT: '🦾',
-    JETPACK: '🚀',
-    REPULSOR_BOOTS: '👢',
+// Vehicle type icon mapping
+const vehicleTypeIcon = {
+    CAR: '🚗',
+    SUV: '🚙',
+    BIKE: '🏍️',
+    TRUCK: '🚛',
+    VAN: '🚐',
+    SCOOTER: '🛵',
 };
 
 /**
  * FloatingGearCard
- * Animated listing card component using the Antigravity design system.
+ * Animated listing card component for the DriveX car rental platform.
  *
  * Props:
  *  - gear: Listing object from the API (see Listing model)
- *  - onLease: Callback fn when "Initiate Lease" is clicked
+ *  - onLease: Callback fn when "Book Now" is clicked
  */
 const FloatingGearCard = ({ gear, onLease }) => {
     const {
-        name = 'Unknown Gear',
-        type = 'HOVERBOARD',
-        pricePerCycle = 0,
-        thrustPower = 0,
-        batteryLife = 0,
-        requiredClearance = 'CIVILIAN',
+        name = 'Unknown Vehicle',
+        type = 'CAR',
+        pricePerDay = 0,
+        brand = '',
+        model = '',
+        seats = 0,
+        fuelType = 'PETROL',
+        transmission = 'MANUAL',
+        mileage = 0,
         imageUrl,
         averageRating = 0,
         numReviews = 0,
         isAvailable = true,
+        location,
     } = gear || {};
 
     const handleLease = (e) => {
@@ -46,36 +44,29 @@ const FloatingGearCard = ({ gear, onLease }) => {
     return (
         <div
             className="
-        group relative w-full bg-matte rounded-2xl border border-gray-800
-        transition-all duration-500 cursor-pointer overflow-hidden flex flex-col
-        hover:-translate-y-3
-        hover:border-neon/40
-        hover:shadow-[0_0_30px_rgba(0,240,255,0.25),0_20px_40px_rgba(0,0,0,0.6)]
+        group relative w-full bg-white rounded-xl border border-gray-200
+        transition-all duration-300 cursor-pointer overflow-hidden flex flex-col
+        hover:-translate-y-1
+        hover:shadow-md
       "
         >
-            {/* ── Holographic top bar ───────────────────────────────────── */}
+            {/* ── Top accent bar ─────────────────────────────────────── */}
             <div className="holo-bar" />
 
             {/* ── Availability indicator (top-right corner) ─────────────── */}
             <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${isAvailable ? 'bg-green-400 animate-pulse' : 'bg-laser'}`} />
-                <span className={`text-[9px] font-mono font-bold uppercase tracking-widest ${isAvailable ? 'text-green-400' : 'text-laser'}`}>
-                    {isAvailable ? 'AVAILABLE' : 'DEPLOYED'}
+                <span className={`w-2 h-2 rounded-full ${isAvailable ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`} />
+                <span className={`text-[9px] font-semibold uppercase tracking-widest ${isAvailable ? 'text-green-600' : 'text-red-500'}`}>
+                    {isAvailable ? 'AVAILABLE' : 'BOOKED'}
                 </span>
             </div>
 
-            {/* ── Gear Type Icon (top-left) ─────────────────────────────── */}
+            {/* ── Vehicle Type Icon (top-left) ────────────────────────── */}
             <div className="absolute top-3 left-3 z-10 text-lg">
-                {gearTypeIcon[type] || '⚙️'}
+                {vehicleTypeIcon[type] || '🚗'}
             </div>
 
-            {/* ── Background gradient hover overlay ────────────────────── */}
-            <div className="
-        absolute inset-0 bg-gradient-to-b from-nebula/10 to-transparent
-        opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl
-      " />
-
-            {/* ── Gear Image ───────────────────────────────────────────── */}
+            {/* ── Vehicle Image ──────────────────────────────────────── */}
             <div className="relative h-44 flex items-center justify-center p-4 mt-2">
                 {imageUrl ? (
                     <img
@@ -83,20 +74,17 @@ const FloatingGearCard = ({ gear, onLease }) => {
                         alt={name}
                         className="
               h-full w-full object-contain
-              transition-transform duration-700 group-hover:scale-110
-              group-hover:drop-shadow-[0_0_20px_rgba(0,240,255,0.6)]
-              animate-float-slow
+              transition-transform duration-500 group-hover:scale-105
             "
                     />
                 ) : (
-                    /* Placeholder with gear icon when no image */
+                    /* Placeholder with vehicle icon when no image */
                     <div className="
-            w-32 h-32 rounded-full bg-surface border border-gray-700
+            w-32 h-32 rounded-full bg-slate-50 border border-gray-200
             flex items-center justify-center text-5xl
-            transition-transform duration-700 group-hover:scale-110
-            group-hover:shadow-neon-md animate-float-slow
+            transition-transform duration-500 group-hover:scale-105
           ">
-                        {gearTypeIcon[type] || '⚙️'}
+                        {vehicleTypeIcon[type] || '🚗'}
                     </div>
                 )}
             </div>
@@ -104,30 +92,38 @@ const FloatingGearCard = ({ gear, onLease }) => {
             {/* ── Card Body ────────────────────────────────────────────── */}
             <div className="relative z-10 flex flex-col flex-grow px-5 pb-6 pt-2">
 
-                {/* Gear Name */}
+                {/* Vehicle Name */}
                 <h3 className="
-          text-starlight font-orbitron font-bold text-base uppercase tracking-wider
-          leading-tight mb-1 group-hover:text-neon transition-colors duration-300
+          text-slate-900 font-semibold text-base
+          leading-tight mb-1 group-hover:text-blue-600 transition-colors duration-300
         ">
                     {name}
                 </h3>
 
-                {/* Clearance badge */}
-                <div className="mb-3">
-                    <span className={`clearance-badge ${clearanceBadgeClass[requiredClearance] || ''}`}>
-                        ◈ {requiredClearance}
-                    </span>
+                {/* Brand & Location */}
+                <div className="mb-3 flex items-center gap-2 text-xs text-slate-500">
+                    <span>{brand} {model}</span>
+                    {location?.city && (
+                        <>
+                            <span>•</span>
+                            <span>📍 {location.city}</span>
+                        </>
+                    )}
                 </div>
 
-                {/* ── Tech Specs Grid ───────────────────────────────────── */}
-                <div className="grid grid-cols-2 gap-3 mb-4 border-t border-gray-800 pt-3">
+                {/* ── Vehicle Specs Grid ──────────────────────────────── */}
+                <div className="grid grid-cols-3 gap-3 mb-4 border-t border-gray-100 pt-3">
                     <div className="flex flex-col gap-0.5">
-                        <span className="hud-label">Thrust</span>
-                        <span className="hud-value">{thrustPower} <span className="text-neon text-xs">kN</span></span>
+                        <span className="hud-label">Seats</span>
+                        <span className="hud-value">{seats}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                        <span className="hud-label">Battery</span>
-                        <span className="hud-value">{batteryLife} <span className="text-neon text-xs">hrs</span></span>
+                        <span className="hud-label">Fuel</span>
+                        <span className="hud-value text-xs">{fuelType}</span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="hud-label">{fuelType === 'ELECTRIC' ? 'Range' : 'Mileage'}</span>
+                        <span className="hud-value">{mileage} <span className="text-slate-400 text-xs">{fuelType === 'ELECTRIC' ? 'km' : 'km/l'}</span></span>
                     </div>
                 </div>
 
@@ -137,43 +133,41 @@ const FloatingGearCard = ({ gear, onLease }) => {
                         {[1, 2, 3, 4, 5].map((star) => (
                             <span
                                 key={star}
-                                className={`text-xs ${star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-700'}`}
+                                className={`text-xs ${star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
                             >
                                 ★
                             </span>
                         ))}
                     </div>
-                    <span className="text-dim text-xs font-mono">({numReviews})</span>
+                    <span className="text-slate-400 text-xs">({numReviews})</span>
                 </div>
 
                 {/* ── Price & Action ────────────────────────────────────── */}
                 <div className="flex items-center justify-between mt-auto">
                     <div className="flex flex-col">
                         <span className="hud-label">Price</span>
-                        <span className="text-neon font-orbitron font-bold text-lg">
-                            {pricePerCycle}
-                            <span className="text-dim text-xs font-mono ml-1">credits/cycle</span>
+                        <span className="text-blue-600 font-bold text-lg">
+                            ₹{pricePerDay}
+                            <span className="text-slate-400 text-xs font-normal ml-1">/day</span>
                         </span>
                     </div>
 
-                    {/* Lease button — slides up on hover */}
+                    {/* Book button */}
                     <button
                         onClick={handleLease}
                         disabled={!isAvailable}
                         className="
-              relative overflow-hidden
-              bg-gradient-to-r from-neon to-nebula
-              text-void font-orbitron font-bold text-xs uppercase tracking-widest
-              px-4 py-2 rounded-full
-              transition-all duration-300
-              hover:shadow-neon-md hover:scale-105
+              bg-blue-600 text-white font-semibold text-xs uppercase tracking-wide
+              px-4 py-2 rounded-lg
+              transition-all duration-200
+              hover:bg-blue-700 hover:shadow-md
               active:scale-95
-              disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100
+              disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-blue-600
               opacity-0 translate-y-2
               group-hover:opacity-100 group-hover:translate-y-0
             "
                     >
-                        {isAvailable ? '⚡ Initiate Lease' : 'Deployed'}
+                        {isAvailable ? '🚀 Book Now' : 'Booked'}
                     </button>
                 </div>
             </div>
