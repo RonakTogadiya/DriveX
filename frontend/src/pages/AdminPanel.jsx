@@ -4,6 +4,7 @@ import { getAdminStats, getAllUsers, toggleBlockUser, verifyUser, getAllListings
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../context/AuthContext';
 
 const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
