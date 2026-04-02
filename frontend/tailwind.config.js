@@ -11,7 +11,7 @@ export default {
                 'void': '#F8FAFC', // Page background – off-white
                 'matte': '#FFFFFF', // Card background – white
                 'surface': '#F1F5F9', // Slightly elevated / input bg
-                'neon': '#2563EB', // Primary accent – blue
+                'neon': '#10B981', // Primary accent – emerald green
                 'nebula': '#7C3AED', // Secondary accent – violet
                 'laser': '#EF4444', // Error / danger – red
                 'starlight': '#0F172A', // Primary text – near-black
@@ -50,9 +50,9 @@ export default {
                 'shimmer': 'shimmer 2s linear infinite',
             },
             backgroundImage: {
-                'neon-grad': 'linear-gradient(135deg, #2563EB, #7C3AED)',
+                'neon-grad': 'linear-gradient(135deg, #10B981, #7C3AED)',
                 'card-grad': 'linear-gradient(180deg, rgba(124,58,237,0.04) 0%, transparent 100%)',
-                'hero-grad': 'radial-gradient(ellipse at top, rgba(37,99,235,0.06) 0%, transparent 70%)',
+                'hero-grad': 'radial-gradient(ellipse at top, rgba(16,185,129,0.06) 0%, transparent 70%)',
             },
         },
     },

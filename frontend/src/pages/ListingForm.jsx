@@ -73,9 +73,9 @@ const ListingForm = () => {
         } finally { setLoading(false); }
     };
 
-    if (fetching) return <div className="min-h-screen flex items-center justify-center text-blue-600 animate-pulse">Loading...</div>;
+    if (fetching) return <div className="min-h-screen flex items-center justify-center text-emerald-600 animate-pulse">Loading...</div>;
 
-    const inputClass = "bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all";
+    const inputClass = "bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all";
     const labelClass = "text-xs font-semibold text-slate-500 uppercase tracking-wider";
 
     const InputField = ({ label, name, type = 'text', placeholder, required, min, max, step }) => {
@@ -96,7 +96,7 @@ const ListingForm = () => {
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
             <div className="max-w-2xl mx-auto">
                 <div className="mb-8">
-                    <button onClick={() => navigate('/my-listings')} className="text-slate-500 text-sm hover:text-blue-600 transition-colors mb-4 block">← Back to My Vehicles</button>
+                    <button onClick={() => navigate('/my-listings')} className="text-slate-500 text-sm hover:text-emerald-600 transition-colors mb-4 block">← Back to My Vehicles</button>
                     <h1 className="font-bold text-2xl text-slate-900">{isEdit ? 'Update Vehicle' : 'List a Vehicle'}</h1>
                 </div>
 
@@ -104,7 +104,7 @@ const ListingForm = () => {
 
                     {/* Section 1: Basic Info */}
                     <div>
-                        <h2 className="text-xs text-blue-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">01 — Vehicle Info</h2>
+                        <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">01 — Vehicle Info</h2>
                         <div className="grid gap-4">
                             <InputField label="Listing Title *" name="name" placeholder="e.g. Toyota Fortuner 2022" required />
                             <div className="flex flex-col gap-1.5">
@@ -113,7 +113,7 @@ const ListingForm = () => {
                                     {VEHICLE_TYPES.map((t) => (
                                         <button key={t} type="button" onClick={() => setForm((p) => ({ ...p, type: t }))}
                                             className={`flex flex-col items-center py-2 px-1 rounded-xl border text-xs transition-all duration-150
-                        ${form.type === t ? 'border-blue-500 bg-blue-50 text-blue-600 ring-1 ring-blue-200' : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300'}`}>
+                        ${form.type === t ? 'border-emerald-500 bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200' : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300'}`}>
                                             <span className="text-lg mb-0.5">{TYPE_ICONS[t]}</span>{t}
                                         </button>
                                     ))}
@@ -130,7 +130,7 @@ const ListingForm = () => {
 
                     {/* Section 2: Specs */}
                     <div>
-                        <h2 className="text-xs text-blue-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">02 — Specifications</h2>
+                        <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">02 — Specifications</h2>
                         <div className="grid grid-cols-2 gap-4">
                             <InputField label="Brand *" name="brand" placeholder="Toyota" required />
                             <InputField label="Model *" name="model" placeholder="Fortuner" required />
@@ -145,7 +145,7 @@ const ListingForm = () => {
                                     {FUEL_TYPES.map((f) => (
                                         <button key={f} type="button" onClick={() => setForm((p) => ({ ...p, fuelType: f }))}
                                             className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all
-                        ${form.fuelType === f ? 'border-blue-500 bg-blue-50 text-blue-600' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>{f}</button>
+                        ${form.fuelType === f ? 'border-emerald-500 bg-emerald-50 text-emerald-600' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>{f}</button>
                                     ))}
                                 </div>
                             </div>
@@ -156,7 +156,7 @@ const ListingForm = () => {
                                     {TRANSMISSIONS.map((t) => (
                                         <button key={t} type="button" onClick={() => setForm((p) => ({ ...p, transmission: t }))}
                                             className={`flex-1 py-1.5 rounded-lg border text-xs font-semibold transition-all
-                        ${form.transmission === t ? 'border-blue-500 bg-blue-50 text-blue-600' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>{t}</button>
+                        ${form.transmission === t ? 'border-emerald-500 bg-emerald-50 text-emerald-600' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>{t}</button>
                                     ))}
                                 </div>
                             </div>
@@ -165,7 +165,7 @@ const ListingForm = () => {
 
                     {/* Section 3: Pricing */}
                     <div>
-                        <h2 className="text-xs text-blue-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">03 — Pricing</h2>
+                        <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">03 — Pricing</h2>
                         <div className="grid grid-cols-2 gap-4">
                             <InputField label="Standard Price/Day (₹) *" name="pricePerDay" type="number" min="1" step="1" placeholder="e.g. 2500" required />
                             <InputField label="Weekend Price/Day (₹)" name="weekendPrice" type="number" min="1" step="1" placeholder="Optional (e.g. 3000)" />
@@ -174,7 +174,7 @@ const ListingForm = () => {
 
                     {/* Section 4: Location */}
                     <div>
-                        <h2 className="text-xs text-blue-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">04 — Location</h2>
+                        <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">04 — Location</h2>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="col-span-2"><InputField label="Address" name="location.address" placeholder="Street / Area" /></div>
                             <InputField label="City" name="location.city" placeholder="Mumbai" />
@@ -183,7 +183,7 @@ const ListingForm = () => {
                     </div>
 
                     <button type="submit" disabled={loading}
-                        className="bg-blue-600 text-white font-semibold text-sm py-3 rounded-xl hover:bg-blue-700 transition-colors
+                        className="bg-emerald-600 text-white font-semibold text-sm py-3 rounded-xl hover:bg-emerald-700 transition-colors
                                    disabled:opacity-50 flex items-center justify-center gap-2">
                         {loading
                             ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving...</>

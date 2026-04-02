@@ -45,9 +45,9 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 {/* ── Brand ───────────────────────────────────────────── */}
                 <Link to="/" className="flex items-center gap-1.5">
-                    <span className="text-blue-600 font-bold text-xl tracking-tight">Drive</span>
+                    <span className="text-emerald-600 font-bold text-xl tracking-tight">Drive</span>
                     <span className="text-slate-900 font-bold text-xl tracking-tight">X</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-0.5" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-0.5" />
                 </Link>
 
                 {/* ── Desktop Nav ─────────────────────────────────────── */}
@@ -56,7 +56,7 @@ const Navbar = () => {
                         <Link
                             key={to} to={to}
                             className={`text-sm font-medium transition-colors duration-150
-                                ${isActive(to) ? 'text-blue-600' : 'text-slate-500 hover:text-slate-900'}`}
+                                ${isActive(to) ? 'text-emerald-600' : 'text-slate-500 hover:text-slate-900'}`}
                         >
                             {label}
                         </Link>
@@ -68,7 +68,7 @@ const Navbar = () => {
                     {!user ? (
                         <div className="hidden md:flex items-center gap-2">
                             <Link to="/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg transition-colors">Login</Link>
-                            <Link to="/register" className="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">Join Now</Link>
+                            <Link to="/register" className="text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg transition-colors">Join Now</Link>
                         </div>
                     ) : (
                         <div className="flex items-center gap-3">
@@ -76,7 +76,7 @@ const Navbar = () => {
                             <div className="relative" ref={notifRef}>
                                 <button
                                     onClick={() => { setNotifOpen((v) => !v); setProfileOpen(false); }}
-                                    className="relative p-2 text-slate-500 hover:bg-slate-50 hover:text-blue-600 rounded-full transition-colors"
+                                    className="relative p-2 text-slate-500 hover:bg-slate-50 hover:text-emerald-600 rounded-full transition-colors"
                                 >
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -91,7 +91,7 @@ const Navbar = () => {
                                     <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden z-50">
                                         <div className="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                                             <p className="text-slate-800 text-sm font-semibold">Notifications</p>
-                                            {unreadCount > 0 && <span className="text-xs text-blue-600 font-semibold">{unreadCount} new</span>}
+                                            {unreadCount > 0 && <span className="text-xs text-emerald-600 font-semibold">{unreadCount} new</span>}
                                         </div>
                                         <div className="max-h-[320px] overflow-y-auto">
                                             {notifications.length === 0 ? (
@@ -101,7 +101,7 @@ const Navbar = () => {
                                                     <div
                                                         key={n._id}
                                                         onClick={() => { if (!n.read) markAsRead(n._id); }}
-                                                        className={`p-4 border-b border-slate-100 cursor-pointer transition-colors ${!n.read ? 'bg-blue-50/30 hover:bg-blue-50/50' : 'hover:bg-slate-50'}`}
+                                                        className={`p-4 border-b border-slate-100 cursor-pointer transition-colors ${!n.read ? 'bg-emerald-50/30 hover:bg-emerald-50/50' : 'hover:bg-slate-50'}`}
                                                     >
                                                         <div className="flex items-start gap-3">
                                                             <span className="text-xl shrink-0 mt-0.5">{n.type === 'CHAT' ? '💬' : '📅'}</span>
@@ -126,7 +126,7 @@ const Navbar = () => {
                                     onClick={() => { setProfileOpen((v) => !v); setNotifOpen(false); }}
                                     className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 hover:border-slate-300 transition-all duration-150"
                                 >
-                                    <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs ring-2 ring-blue-100">
+                                    <div className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs ring-2 ring-emerald-100">
                                         {user.username?.[0]?.toUpperCase()}
                                     </div>
                                     <div className="hidden sm:block text-left leading-tight py-0.5">
@@ -157,7 +157,7 @@ const Navbar = () => {
                                             ].filter(Boolean).map((item) => (
                                                 <Link
                                                     key={item.to} to={item.to}
-                                                    className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors"
+                                                    className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50 transition-colors"
                                                 >
                                                     <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
@@ -197,19 +197,19 @@ const Navbar = () => {
             {mobileOpen && (
                 <div className="md:hidden border-t border-slate-100 bg-white px-4 py-4 flex flex-col gap-3">
                     {navLinks.map(({ to, label }) => (
-                        <Link key={to} to={to} className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">{label}</Link>
+                        <Link key={to} to={to} className="text-slate-600 font-medium text-sm hover:text-emerald-600 transition-colors py-2">{label}</Link>
                     ))}
                     {user && (
                         <>
-                            <Link to="/dashboard" className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">My Trips</Link>
-                            {user.role === 'owner' && <Link to="/owner-dashboard" className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">Owner Dashboard</Link>}
-                            <Link to="/wishlist" className="text-slate-600 font-medium text-sm hover:text-blue-600 transition-colors py-2">My Wishlist</Link>
+                            <Link to="/dashboard" className="text-slate-600 font-medium text-sm hover:text-emerald-600 transition-colors py-2">My Trips</Link>
+                            {user.role === 'owner' && <Link to="/owner-dashboard" className="text-slate-600 font-medium text-sm hover:text-emerald-600 transition-colors py-2">Owner Dashboard</Link>}
+                            <Link to="/wishlist" className="text-slate-600 font-medium text-sm hover:text-emerald-600 transition-colors py-2">My Wishlist</Link>
                         </>
                     )}
                     {!user
                         ? <div className="flex flex-col gap-2 mt-2 pt-4 border-t border-slate-100">
                             <Link to="/login" className="bg-slate-50 border border-slate-200 text-center font-medium text-slate-700 text-sm px-4 py-2.5 rounded-xl">Login</Link>
-                            <Link to="/register" className="bg-blue-600 font-medium text-white text-center text-sm px-4 py-2.5 rounded-xl shadow-sm">Join Now</Link>
+                            <Link to="/register" className="bg-emerald-600 font-medium text-white text-center text-sm px-4 py-2.5 rounded-xl shadow-sm">Join Now</Link>
                         </div>
                         : <button onClick={() => { logout(); navigate('/'); }} className="mt-4 pt-4 border-t border-slate-100 text-red-500 font-medium text-sm text-left w-full py-2">Sign Out</button>
                     }

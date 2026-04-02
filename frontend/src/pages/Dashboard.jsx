@@ -6,7 +6,7 @@ import { format, isFuture } from 'date-fns';
 
 const STATUS_CONFIG = {
     PENDING: { color: 'bg-yellow-50 text-yellow-700 border-yellow-200', label: 'Pending' },
-    CONFIRMED: { color: 'bg-blue-50 text-blue-700 border-blue-200', label: 'Confirmed' },
+    CONFIRMED: { color: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'Confirmed' },
     ACTIVE: { color: 'bg-green-50 text-green-700 border-green-200', label: 'Active' },
     COMPLETED: { color: 'bg-slate-100 text-slate-600 border-slate-200', label: 'Completed' },
     CANCELLED: { color: 'bg-red-50 text-red-600 border-red-200', label: 'Cancelled' },
@@ -62,7 +62,7 @@ const Dashboard = () => {
 
                 {/* Header */}
                 <div className="mb-10">
-                    <p className="text-blue-600 text-xs font-semibold uppercase tracking-widest mb-1">Dashboard</p>
+                    <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-1">Dashboard</p>
                     <h1 className="font-bold text-2xl text-slate-900">
                         Welcome back, {user?.username}
                     </h1>
@@ -72,7 +72,7 @@ const Dashboard = () => {
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                     {[
-                        { label: 'Total Spent', value: `₹${totalSpent.toLocaleString()}`, icon: '💳', color: 'text-blue-600' },
+                        { label: 'Total Spent', value: `₹${totalSpent.toLocaleString()}`, icon: '💳', color: 'text-emerald-600' },
                         { label: 'Days Rented', value: totalDays, icon: '📅', color: 'text-violet-600' },
                         { label: 'Active', value: activeCount, icon: '🚗', color: 'text-green-600' },
                         { label: 'Pending', value: pendingCount, icon: '⏳', color: 'text-amber-600' },
@@ -103,7 +103,7 @@ const Dashboard = () => {
                             <p className="text-slate-800 font-semibold">No bookings yet</p>
                             <p className="text-slate-500 text-sm mt-1">Browse vehicles and make your first booking</p>
                             <button onClick={() => navigate('/listings')}
-                                className="bg-blue-600 text-white text-sm font-semibold px-6 py-2 rounded-lg mt-4 hover:bg-blue-700 transition-colors">
+                                className="bg-emerald-600 text-white text-sm font-semibold px-6 py-2 rounded-lg mt-4 hover:bg-emerald-700 transition-colors">
                                 Browse Vehicles
                             </button>
                         </div>
@@ -121,7 +121,7 @@ const Dashboard = () => {
                                     <div key={booking._id}
                                         className={`grid grid-cols-1 md:grid-cols-[1fr_120px_160px_100px_100px_80px] gap-3 md:gap-4 px-5 py-4 items-center
                       ${idx % 2 === 0 ? '' : 'bg-slate-50/50'}
-                      hover:bg-blue-50/40 transition-colors duration-150`}>
+                      hover:bg-emerald-50/40 transition-colors duration-150`}>
                                         <div className="flex items-center gap-3 min-w-0">
                                             <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-sm">
                                                 🚗
@@ -140,7 +140,7 @@ const Dashboard = () => {
                                             {booking.endDate ? format(new Date(booking.endDate), 'dd MMM yy') : '—'}
                                         </div>
                                         <span className="text-slate-500 text-sm">{booking.totalDays} days</span>
-                                        <span className="text-blue-600 font-bold text-sm flex flex-col items-end">
+                                        <span className="text-emerald-600 font-bold text-sm flex flex-col items-end">
                                             ₹{booking.totalCost?.toLocaleString()}
                                             {(booking.status === 'CONFIRMED' || booking.status === 'ACTIVE') && (
                                                 <div className="flex flex-col gap-1 mt-2 items-end">
@@ -155,7 +155,7 @@ const Dashboard = () => {
                                                     {booking.depositPaid && !booking.rentalPaid && (
                                                         <button 
                                                             onClick={() => navigate(`/payment/${booking._id}?type=RENTAL`)}
-                                                            className="text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white px-2 py-1 rounded"
+                                                            className="text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white px-2 py-1 rounded"
                                                         >
                                                             Pay Rental
                                                         </button>
@@ -195,7 +195,7 @@ const Dashboard = () => {
                         <p className="text-slate-500 text-sm mb-4">Are you sure you want to cancel this booking? This action cannot be undone.</p>
                         
                         <textarea 
-                            className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm mb-6 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm mb-6 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                             rows="3"
                             placeholder="Reason for cancellation (optional)"
                             value={cancelModal.reason}

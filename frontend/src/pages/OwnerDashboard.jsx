@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 const STATUS_CONFIG = {
     PENDING: { color: 'bg-yellow-50 text-yellow-700 border-yellow-200', label: 'Pending' },
-    CONFIRMED: { color: 'bg-blue-50 text-blue-700 border-blue-200', label: 'Confirmed' },
+    CONFIRMED: { color: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'Confirmed' },
     ACTIVE: { color: 'bg-green-50 text-green-700 border-green-200', label: 'Active' },
     COMPLETED: { color: 'bg-slate-100 text-slate-600 border-slate-200', label: 'Completed' },
     CANCELLED: { color: 'bg-red-50 text-red-600 border-red-200', label: 'Cancelled' },
@@ -68,7 +68,7 @@ const OwnerDashboard = () => {
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
             <div className="max-w-6xl mx-auto">
                 <div className="mb-10">
-                    <p className="text-blue-600 text-xs font-semibold uppercase tracking-widest mb-1">Owner Area</p>
+                    <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-1">Owner Area</p>
                     <h1 className="font-bold text-2xl text-slate-900">
                         Dashboard & Requests
                     </h1>
@@ -80,7 +80,7 @@ const OwnerDashboard = () => {
                     {[
                         { label: 'Est. Earnings', value: `₹${totalEarnings.toLocaleString()}`, icon: '💰', color: 'text-green-600' },
                         { label: 'Pending Requests', value: pendingCount, icon: '🔔', color: 'text-amber-600' },
-                        { label: 'Active Rentals', value: activeCount, icon: '🚗', color: 'text-blue-600' },
+                        { label: 'Active Rentals', value: activeCount, icon: '🚗', color: 'text-emerald-600' },
                         { label: 'Total Requests', value: totalRequests, icon: '📈', color: 'text-violet-600' },
                     ].map(({ label, value, icon, color }) => (
                         <div key={label} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
@@ -133,7 +133,7 @@ const OwnerDashboard = () => {
 
                                         <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
                                             <div className="text-right">
-                                                <p className="text-blue-600 font-bold text-sm">₹{booking.totalCost?.toLocaleString()}</p>
+                                                <p className="text-emerald-600 font-bold text-sm">₹{booking.totalCost?.toLocaleString()}</p>
                                                 <span className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${status.color}`}>
                                                     {status.label}
                                                 </span>

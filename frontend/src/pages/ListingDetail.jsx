@@ -12,7 +12,7 @@ const fuelBadge = {
     DIESEL: 'bg-slate-100 text-slate-600 border-slate-200',
     ELECTRIC: 'bg-green-50 text-green-600 border-green-200',
     HYBRID: 'bg-teal-50 text-teal-600 border-teal-200',
-    CNG: 'bg-blue-50 text-blue-600 border-blue-200',
+    CNG: 'bg-emerald-50 text-emerald-600 border-emerald-200',
 };
 const typeIcon = { CAR: '🚗', BIKE: '🏍️', SUV: '🚙', TRUCK: '🚛', VAN: '🚌', SCOOTER: '🛵' };
 
@@ -102,7 +102,7 @@ const ListingDetail = () => {
 
                 {/* ── Breadcrumb ────────────────────────────────────────── */}
                 <div className="flex items-center gap-2 text-slate-400 text-sm mb-6">
-                    <button onClick={() => navigate('/listings')} className="hover:text-blue-600 transition-colors">
+                    <button onClick={() => navigate('/listings')} className="hover:text-emerald-600 transition-colors">
                         ← Browse Vehicles
                     </button>
                     <span>/</span>
@@ -138,7 +138,7 @@ const ListingDetail = () => {
                                     {images.map((img, i) => (
                                         <button key={i} onClick={() => setActiveImage(i)}
                                             className={`w-16 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0
-                                            ${i === activeImage ? 'border-blue-500' : 'border-gray-200 opacity-60 hover:opacity-100'}`}>
+                                            ${i === activeImage ? 'border-emerald-500' : 'border-gray-200 opacity-60 hover:opacity-100'}`}>
                                             <img src={img} alt="" className="w-full h-full object-cover" />
                                         </button>
                                     ))}
@@ -157,7 +157,7 @@ const ListingDetail = () => {
                                     <p className="text-slate-400 text-sm mt-0.5">{listing.model} · {listing.year}</p>
                                 </div>
                                 <div className="text-right flex-shrink-0">
-                                    <p className="text-blue-600 font-bold text-2xl">₹{listing.pricePerDay?.toLocaleString()}</p>
+                                    <p className="text-emerald-600 font-bold text-2xl">₹{listing.pricePerDay?.toLocaleString()}</p>
                                     <p className="text-slate-400 text-xs">per day</p>
                                     {listing.weekendPrice > 0 && (
                                         <p className="text-amber-500 font-bold text-xs mt-1">
@@ -190,7 +190,7 @@ const ListingDetail = () => {
                                 <button key={key} onClick={() => setActiveTab(key)}
                                     className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-150
                                     ${activeTab === key
-                                            ? 'bg-blue-600 text-white shadow-sm'
+                                            ? 'bg-emerald-600 text-white shadow-sm'
                                             : 'text-slate-500 hover:text-slate-800'}`}>
                                     {label}
                                 </button>
@@ -261,14 +261,14 @@ const ListingDetail = () => {
                                     <input type="date" min={today} value={startDate}
                                         onChange={(e) => { setStartDate(e.target.value); if (endDate && e.target.value >= endDate) setEndDate(''); }}
                                         className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-800 text-sm
-                                       focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+                                       focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Return Date</label>
                                     <input type="date" min={startDate || today} value={endDate} disabled={!startDate}
                                         onChange={(e) => setEndDate(e.target.value)}
                                         className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-800 text-sm
-                                       focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all disabled:opacity-40" />
+                                       focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all disabled:opacity-40" />
                                 </div>
                             </div>
 
@@ -281,15 +281,15 @@ const ListingDetail = () => {
                                     <div className="h-px bg-slate-200" />
                                     <div className="flex justify-between">
                                         <span className="text-slate-600 text-sm font-semibold">Total</span>
-                                        <span className="text-blue-600 font-bold text-lg">₹{totalCost.toLocaleString()}</span>
+                                        <span className="text-emerald-600 font-bold text-lg">₹{totalCost.toLocaleString()}</span>
                                     </div>
                                 </div>
                             )}
 
                             <button onClick={handleBooking}
                                 disabled={bookingLoading || !listing.isAvailable || totalDays < 1}
-                                className="w-full mt-4 bg-blue-600 text-white font-semibold text-sm py-3 rounded-xl
-                                           hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed
+                                className="w-full mt-4 bg-emerald-600 text-white font-semibold text-sm py-3 rounded-xl
+                                           hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed
                                            flex items-center justify-center gap-2">
                                 {bookingLoading
                                     ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Processing...</>
@@ -298,7 +298,7 @@ const ListingDetail = () => {
 
                             {!user && (
                                 <p className="text-center text-slate-400 text-xs mt-2">
-                                    <button onClick={() => navigate('/login')} className="text-blue-600 hover:underline">Sign in</button> to book
+                                    <button onClick={() => navigate('/login')} className="text-emerald-600 hover:underline">Sign in</button> to book
                                 </p>
                             )}
                         </div>
@@ -308,7 +308,7 @@ const ListingDetail = () => {
                             <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
                                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Listed by</p>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-base">
+                                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-base">
                                         {listing.owner.username?.[0]?.toUpperCase()}
                                     </div>
                                     <div>

@@ -58,9 +58,9 @@ const SearchResults = () => {
 
                 {/* ── Hero ──────────────────────────────────────────────── */}
                 <div className="text-center mb-10">
-                    <p className="text-blue-600 text-xs font-semibold uppercase tracking-widest mb-2">DriveX Marketplace</p>
+                    <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-2">DriveX Marketplace</p>
                     <h1 className="font-bold text-4xl md:text-5xl text-slate-900">
-                        Find Your <span className="text-blue-600">Ride</span>
+                        Find Your <span className="text-emerald-600">Ride</span>
                     </h1>
                     <p className="text-slate-500 mt-3 text-sm max-w-md mx-auto">
                         Browse premium vehicles. Book in minutes. Drive anywhere.
@@ -77,24 +77,24 @@ const SearchResults = () => {
                             onChange={(e) => setParam('search', e.target.value)}
                             className="flex-1 min-w-[200px] bg-slate-50 border border-gray-200 rounded-xl px-4 py-2.5
                          text-slate-800 text-sm placeholder:text-slate-400
-                         focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                         focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all"
                         />
                         <select value={type} onChange={(e) => setParam('type', e.target.value)}
-                            className="bg-slate-50 border border-gray-200 rounded-xl px-3 py-2.5 text-slate-600 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
+                            className="bg-slate-50 border border-gray-200 rounded-xl px-3 py-2.5 text-slate-600 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
                             <option value="">All Types</option>
                             {VEHICLE_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                         </select>
                         <select value={fuelType} onChange={(e) => setParam('fuelType', e.target.value)}
-                            className="bg-slate-50 border border-gray-200 rounded-xl px-3 py-2.5 text-slate-600 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
+                            className="bg-slate-50 border border-gray-200 rounded-xl px-3 py-2.5 text-slate-600 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
                             <option value="">All Fuel Types</option>
                             {FUEL_TYPES.map((f) => <option key={f} value={f}>{f}</option>)}
                         </select>
                         <select value={sort} onChange={(e) => setParam('sort', e.target.value)}
-                            className="bg-slate-50 border border-gray-200 rounded-xl px-3 py-2.5 text-slate-600 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
+                            className="bg-slate-50 border border-gray-200 rounded-xl px-3 py-2.5 text-slate-600 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
                             {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                         </select>
                         <button onClick={() => setParam('order', order === 'asc' ? 'desc' : 'asc')}
-                            className="bg-slate-50 border border-gray-200 rounded-xl px-4 py-2.5 text-slate-600 text-sm hover:border-blue-400 hover:bg-blue-50 transition-all">
+                            className="bg-slate-50 border border-gray-200 rounded-xl px-4 py-2.5 text-slate-600 text-sm hover:border-emerald-400 hover:bg-emerald-50 transition-all">
                             {order === 'asc' ? '↑ Low to High' : '↓ High to Low'}
                         </button>
                     </div>
@@ -116,7 +116,7 @@ const SearchResults = () => {
                         <p className="text-slate-500 text-sm mt-2 max-w-xs mx-auto">{error}</p>
                         <button
                             onClick={() => setSearchParams(new URLSearchParams())}
-                            className="mt-6 px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+                            className="mt-6 px-6 py-2.5 bg-emerald-600 text-white text-sm font-semibold rounded-xl hover:bg-emerald-700 transition-colors"
                         >
                             Retry
                         </button>
@@ -161,12 +161,12 @@ const SearchResults = () => {
                 {pages > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-10">
                         <button disabled={page <= 1} onClick={() => setParam('page', page - 1)}
-                            className="px-4 py-2 text-sm border border-gray-200 rounded-lg text-slate-600 hover:border-blue-400 hover:text-blue-600 disabled:opacity-40 transition-colors">
+                            className="px-4 py-2 text-sm border border-gray-200 rounded-lg text-slate-600 hover:border-emerald-400 hover:text-emerald-600 disabled:opacity-40 transition-colors">
                             ← Prev
                         </button>
                         <span className="text-slate-500 text-sm px-4">{page} / {pages}</span>
                         <button disabled={page >= pages} onClick={() => setParam('page', page + 1)}
-                            className="px-4 py-2 text-sm border border-gray-200 rounded-lg text-slate-600 hover:border-blue-400 hover:text-blue-600 disabled:opacity-40 transition-colors">
+                            className="px-4 py-2 text-sm border border-gray-200 rounded-lg text-slate-600 hover:border-emerald-400 hover:text-emerald-600 disabled:opacity-40 transition-colors">
                             Next →
                         </button>
                     </div>

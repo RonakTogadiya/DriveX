@@ -54,7 +54,7 @@ const PaymentPage = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-50">
-                <span className="text-blue-600 font-semibold animate-pulse">Generating Secure QR Code...</span>
+                <span className="text-emerald-600 font-semibold animate-pulse">Generating Secure QR Code...</span>
             </div>
         );
     }
@@ -63,7 +63,7 @@ const PaymentPage = () => {
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
             <div className="max-w-md mx-auto">
                 <div className="mb-8">
-                    <button onClick={() => navigate('/dashboard')} className="text-slate-500 text-sm hover:text-blue-600 transition-colors mb-4 block">← Back to Dashboard</button>
+                    <button onClick={() => navigate('/dashboard')} className="text-slate-500 text-sm hover:text-emerald-600 transition-colors mb-4 block">← Back to Dashboard</button>
                     <h1 className="font-bold text-2xl text-slate-900">Secure Payment</h1>
                     <p className="text-slate-500 text-sm mt-1">Scan the QR code to pay your vehicle {type === 'DEPOSIT' ? 'security deposit' : 'rental fee'}.</p>
                 </div>
@@ -75,7 +75,7 @@ const PaymentPage = () => {
                     </div>
 
                     <p className="text-slate-500 text-sm mb-2">Amount to pay</p>
-                    <p className="text-4xl font-black text-blue-600 mb-8">₹{amount?.toLocaleString()}</p>
+                    <p className="text-4xl font-black text-emerald-600 mb-8">₹{amount?.toLocaleString()}</p>
 
                     <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 mb-6">
                         {qrData ? (
@@ -97,7 +97,7 @@ const PaymentPage = () => {
                             placeholder="e.g. 123456789012"
                             value={txnId}
                             onChange={(e) => setTxnId(e.target.value)}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all mb-4"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all mb-4"
                         />
                         
                         {type === 'RENTAL' && (
@@ -110,7 +110,7 @@ const PaymentPage = () => {
                         <button 
                             type="submit" 
                             disabled={verifying}
-                            className="w-full bg-blue-600 text-white font-semibold text-sm py-3.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="w-full bg-emerald-600 text-white font-semibold text-sm py-3.5 rounded-xl hover:bg-emerald-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {verifying ? 'Verifying...' : 'Confirm Payment'}
                         </button>

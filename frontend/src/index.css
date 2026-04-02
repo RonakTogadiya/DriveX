@@ -50,12 +50,12 @@ body {
 
   /* Primary button */
   .btn-neon {
-    @apply bg-blue-600 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-md active:scale-95;
+    @apply bg-emerald-600 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-all duration-200 hover:bg-emerald-700 hover:shadow-md active:scale-95;
   }
 
   /* Ghost/outline button */
   .btn-ghost {
-    @apply border border-blue-600 text-blue-600 font-semibold text-sm px-6 py-2.5 rounded-lg transition-all duration-200 hover:bg-blue-50 active:scale-95;
+    @apply border border-emerald-600 text-emerald-600 font-semibold text-sm px-6 py-2.5 rounded-lg transition-all duration-200 hover:bg-emerald-50 active:scale-95;
   }
 
   /* Clean card */
@@ -85,7 +85,7 @@ body {
 
   /* Top accent bar on cards — thin blue line */
   .holo-bar {
-    @apply absolute top-0 left-0 w-full h-[3px] bg-blue-600;
+    @apply absolute top-0 left-0 w-full h-[3px] bg-emerald-600;
   }
 
   /* Skeleton loader */

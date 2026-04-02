@@ -8,7 +8,7 @@ const fuelBadge = {
     DIESEL: 'bg-slate-100 text-slate-600 border-slate-200',
     ELECTRIC: 'bg-green-50 text-green-600 border-green-200',
     HYBRID: 'bg-teal-50 text-teal-600 border-teal-200',
-    CNG: 'bg-blue-50 text-blue-600 border-blue-200',
+    CNG: 'bg-emerald-50 text-emerald-600 border-emerald-200',
 };
 
 const typeIcon = {
@@ -105,7 +105,7 @@ const VehicleCard = ({ listing }) => {
                 {/* Price + rating */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <span className="text-blue-600 font-bold text-lg">₹{listing.pricePerDay?.toLocaleString()}</span>
+                        <span className="text-emerald-600 font-bold text-lg">₹{listing.pricePerDay?.toLocaleString()}</span>
                         <span className="text-slate-400 text-xs ml-1">/ day</span>
                     </div>
                     {listing.averageRating > 0 && (
@@ -116,7 +116,7 @@ const VehicleCard = ({ listing }) => {
 
             {/* ── Hover CTA ─────────────────────────────────────────── */}
             <div className="px-4 pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 -mt-1">
-                <div className="w-full py-2 bg-blue-600 text-white text-xs font-semibold text-center rounded-lg">
+                <div className="w-full py-2 bg-emerald-600 text-white text-xs font-semibold text-center rounded-lg">
                     View Details →
                 </div>
             </div>

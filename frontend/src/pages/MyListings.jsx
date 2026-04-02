@@ -44,11 +44,11 @@ const MyListings = () => {
             <div className="max-w-5xl mx-auto">
                 <div className="flex items-center justify-between mb-10">
                     <div>
-                        <p className="text-blue-600 text-xs font-semibold uppercase tracking-widest mb-1">Owner Dashboard</p>
+                        <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-1">Owner Dashboard</p>
                         <h1 className="font-bold text-2xl text-slate-900">My Vehicles</h1>
                     </div>
                     <button onClick={() => navigate('/listings/new')}
-                        className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        className="bg-emerald-600 text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
                         + List New Vehicle
                     </button>
                 </div>
@@ -61,7 +61,7 @@ const MyListings = () => {
                         <p className="text-slate-800 font-semibold mb-2">No vehicles listed</p>
                         <p className="text-slate-500 text-sm mb-6">Start earning by listing your first vehicle.</p>
                         <button onClick={() => navigate('/listings/new')}
-                            className="bg-blue-600 text-white text-sm font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            className="bg-emerald-600 text-white text-sm font-semibold px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
                             List First Vehicle
                         </button>
                     </div>
@@ -77,7 +77,7 @@ const MyListings = () => {
                         {listings.map((l, idx) => (
                             <div key={l._id}
                                 className={`grid grid-cols-1 md:grid-cols-[64px_1fr_100px_100px_100px_120px] gap-4 px-5 py-4 items-center
-                  ${idx % 2 === 0 ? '' : 'bg-slate-50/50'} hover:bg-blue-50/40 transition-colors`}>
+                  ${idx % 2 === 0 ? '' : 'bg-slate-50/50'} hover:bg-emerald-50/40 transition-colors`}>
                                 <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
                                     {l.imageUrl
                                         ? <img src={l.imageUrl} alt="" className="w-full h-full object-contain rounded-xl p-1" />
@@ -88,14 +88,14 @@ const MyListings = () => {
                                     <p className="text-slate-400 text-xs">{l.brand} {l.model} · {l.year}</p>
                                 </div>
                                 <span className="text-slate-500 text-sm hidden md:block">{l.type}</span>
-                                <span className="text-blue-600 font-bold text-sm">₹{l.pricePerDay}<span className="text-slate-400 text-xs">/day</span></span>
+                                <span className="text-emerald-600 font-bold text-sm">₹{l.pricePerDay}<span className="text-slate-400 text-xs">/day</span></span>
                                 <div className="flex items-center gap-1.5">
                                     <span className={`w-2 h-2 rounded-full ${l.isAvailable ? 'bg-green-500' : 'bg-red-400'}`} />
                                     <span className="text-sm text-slate-500">{l.isAvailable ? 'Available' : 'Booked'}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <button onClick={() => navigate(`/listings/edit/${l._id}`)}
-                                        className="flex-1 text-center text-blue-600 border border-blue-200 text-xs font-semibold py-1.5 rounded-lg hover:bg-blue-50 transition-colors">
+                                        className="flex-1 text-center text-emerald-600 border border-emerald-200 text-xs font-semibold py-1.5 rounded-lg hover:bg-emerald-50 transition-colors">
                                         ✏️ Edit
                                     </button>
                                     <button onClick={() => handleDelete(l._id)} disabled={deletingId === l._id}

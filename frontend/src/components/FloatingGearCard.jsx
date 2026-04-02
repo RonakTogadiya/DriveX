@@ -95,7 +95,7 @@ const FloatingGearCard = ({ gear, onLease }) => {
                 {/* Vehicle Name */}
                 <h3 className="
           text-slate-900 font-semibold text-base
-          leading-tight mb-1 group-hover:text-blue-600 transition-colors duration-300
+          leading-tight mb-1 group-hover:text-emerald-600 transition-colors duration-300
         ">
                     {name}
                 </h3>
@@ -146,7 +146,7 @@ const FloatingGearCard = ({ gear, onLease }) => {
                 <div className="flex items-center justify-between mt-auto">
                     <div className="flex flex-col">
                         <span className="hud-label">Price</span>
-                        <span className="text-blue-600 font-bold text-lg">
+                        <span className="text-emerald-600 font-bold text-lg">
                             ₹{pricePerDay}
                             <span className="text-slate-400 text-xs font-normal ml-1">/day</span>
                         </span>
@@ -157,12 +157,12 @@ const FloatingGearCard = ({ gear, onLease }) => {
                         onClick={handleLease}
                         disabled={!isAvailable}
                         className="
-              bg-blue-600 text-white font-semibold text-xs uppercase tracking-wide
+              bg-emerald-600 text-white font-semibold text-xs uppercase tracking-wide
               px-4 py-2 rounded-lg
               transition-all duration-200
-              hover:bg-blue-700 hover:shadow-md
+              hover:bg-emerald-700 hover:shadow-md
               active:scale-95
-              disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-blue-600
+              disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-emerald-600
               opacity-0 translate-y-2
               group-hover:opacity-100 group-hover:translate-y-0
             "

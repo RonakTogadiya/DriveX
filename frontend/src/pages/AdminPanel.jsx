@@ -89,7 +89,7 @@ const AdminPanel = () => {
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
             <div className="max-w-6xl mx-auto">
                 <div className="mb-8">
-                    <p className="text-blue-600 font-semibold text-xs tracking-widest uppercase mb-1">System Administration</p>
+                    <p className="text-emerald-600 font-semibold text-xs tracking-widest uppercase mb-1">System Administration</p>
                     <h1 className="font-bold text-3xl text-slate-900">Admin Control Panel</h1>
                 </div>
 
@@ -105,7 +105,7 @@ const AdminPanel = () => {
                 </div>
 
                 {loading ? (
-                    <div className="p-10 text-center text-blue-600 font-semibold animate-pulse">Loading data...</div>
+                    <div className="p-10 text-center text-emerald-600 font-semibold animate-pulse">Loading data...</div>
                 ) : (
                     <>
                         {/* OVERVIEW TAB */}
@@ -165,7 +165,7 @@ const AdminPanel = () => {
                                         {users.map(u => (
                                             <tr key={u._id} className="border-b last:border-0 hover:bg-slate-50">
                                                 <td className="p-4"><p className="font-semibold text-slate-800">{u.username}</p><p className="text-xs text-slate-500">{u.email}</p></td>
-                                                <td className="p-4"><span className="uppercase text-[10px] font-bold tracking-wider px-2 py-1 rounded-md bg-blue-50 text-blue-700">{u.role}</span></td>
+                                                <td className="p-4"><span className="uppercase text-[10px] font-bold tracking-wider px-2 py-1 rounded-md bg-emerald-50 text-emerald-700">{u.role}</span></td>
                                                 <td className="p-4">{u.isVerified ? <span className="text-green-600 font-bold">Yes</span> : <span className="text-slate-400">No</span>}</td>
                                                 <td className="p-4">{u.isBlocked ? <span className="text-red-600 font-bold">Blocked</span> : <span className="text-green-600 font-bold">Active</span>}</td>
                                                 <td className="p-4 text-right flex flex-col gap-1 items-end">
@@ -247,7 +247,7 @@ const AdminPanel = () => {
                                                 <td className="p-4"><p className="font-mono text-xs">{b._id}</p><p className="text-xs text-slate-500">{format(new Date(b.createdAt), 'dd MMM yyyy')}</p></td>
                                                 <td className="p-4">{b.listing?.name || 'N/A'}</td>
                                                 <td className="p-4">{b.renter?.username || 'N/A'}</td>
-                                                <td className="p-4 font-semibold text-blue-600">₹{b.totalCost}</td>
+                                                <td className="p-4 font-semibold text-emerald-600">₹{b.totalCost}</td>
                                                 <td className="p-4"><span className="uppercase text-[10px] font-bold px-2 py-1 rounded-md bg-slate-100">{b.status}</span></td>
                                             </tr>
                                         ))}
@@ -275,7 +275,7 @@ const AdminPanel = () => {
                                                 <td className="p-4"><p className="font-mono text-xs font-bold text-slate-700">{p.transactionId}</p><p className="text-[10px] text-slate-500">{format(new Date(p.createdAt), 'dd MMM yyyy HH:mm')}</p></td>
                                                 <td className="p-4"><p className="font-bold text-slate-800">{p.type}</p><p className="font-mono text-[10px] text-slate-400">{p.booking?._id}</p></td>
                                                 <td className="p-4">{p.user?.username || 'N/A'}</td>
-                                                <td className="p-4 font-semibold text-blue-600">₹{p.amount}</td>
+                                                <td className="p-4 font-semibold text-emerald-600">₹{p.amount}</td>
                                                 <td className="p-4"><span className="uppercase text-[10px] font-bold px-2 py-1 rounded-md bg-green-50 text-green-700">{p.status}</span></td>
                                             </tr>
                                         ))}

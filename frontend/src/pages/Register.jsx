@@ -41,9 +41,9 @@ const Register = () => {
             <div className="w-full max-w-lg">
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-1.5 mb-6">
-                        <span className="text-blue-600 font-bold text-2xl">Drive</span>
+                        <span className="text-emerald-600 font-bold text-2xl">Drive</span>
                         <span className="text-slate-900 font-bold text-2xl">X</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                     </Link>
                     <h1 className="font-bold text-2xl text-slate-900">Create Account</h1>
                     <p className="text-slate-500 text-sm mt-1">Join the DriveX platform</p>
@@ -59,10 +59,10 @@ const Register = () => {
                                 {ROLES.map(({ value, icon, label, desc }) => (
                                     <button key={value} type="button" onClick={() => setForm((p) => ({ ...p, role: value }))}
                                         className={`flex flex-col items-start gap-1 p-3 rounded-xl border text-left transition-all duration-150
-                      ${form.role === value ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-100' : 'border-slate-200 bg-slate-50 hover:border-slate-300'}`}>
+                      ${form.role === value ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-100' : 'border-slate-200 bg-slate-50 hover:border-slate-300'}`}>
                                         <div className="flex items-center gap-2">
                                             <span className="text-lg">{icon}</span>
-                                            <span className={`text-sm font-semibold ${form.role === value ? 'text-blue-600' : 'text-slate-700'}`}>{label}</span>
+                                            <span className={`text-sm font-semibold ${form.role === value ? 'text-emerald-600' : 'text-slate-700'}`}>{label}</span>
                                         </div>
                                         <span className="text-slate-400 text-xs">{desc}</span>
                                     </button>
@@ -81,7 +81,7 @@ const Register = () => {
                                 <input id={id} name={id} type={type} value={form[id]} onChange={handleChange} placeholder={placeholder}
                                     required={id !== 'phone'}
                                     className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400
-                             focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+                             focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
                             </div>
                         ))}
 
@@ -97,7 +97,7 @@ const Register = () => {
                                 focus:outline-none transition-all
                                 ${id === 'confirmPassword' && form.confirmPassword && form.password !== form.confirmPassword
                                                 ? 'border-red-400 focus:ring-2 focus:ring-red-100'
-                                                : 'border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100'}`} />
+                                                : 'border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100'}`} />
                                 </div>
                             ))}
                         </div>
@@ -107,7 +107,7 @@ const Register = () => {
 
                         <button type="submit"
                             disabled={loading || (!!form.confirmPassword && form.password !== form.confirmPassword)}
-                            className="bg-blue-600 text-white font-semibold text-sm mt-1 py-3 rounded-xl hover:bg-blue-700 transition-colors
+                            className="bg-emerald-600 text-white font-semibold text-sm mt-1 py-3 rounded-xl hover:bg-emerald-700 transition-colors
                                        disabled:opacity-50 flex items-center justify-center gap-2">
                             {loading
                                 ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Creating account...</>
@@ -117,7 +117,7 @@ const Register = () => {
 
                     <p className="text-center text-slate-500 text-sm mt-6">
                         Already have an account?{' '}
-                        <Link to="/login" className="text-blue-600 hover:underline font-semibold">Sign In →</Link>
+                        <Link to="/login" className="text-emerald-600 hover:underline font-semibold">Sign In →</Link>
                     </p>
                 </div>
             </div>

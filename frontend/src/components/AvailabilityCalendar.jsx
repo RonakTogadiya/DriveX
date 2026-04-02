@@ -108,7 +108,7 @@ const AvailabilityCalendar = ({ listingId, isOwner, initialBookedStatus = [] }) 
                     <button 
                         onClick={handleSave} 
                         disabled={loading}
-                        className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                        className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50"
                     >
                         {loading ? 'Saving...' : 'Save Dates'}
                     </button>

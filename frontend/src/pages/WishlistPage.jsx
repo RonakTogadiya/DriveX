@@ -50,7 +50,7 @@ const WishlistPage = () => {
     if (loading) {
         return (
             <div className="min-h-screen pt-24 px-4 pb-12 bg-slate-50 flex justify-center">
-                <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mt-20"></div>
+                <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mt-20"></div>
             </div>
         );
     }
@@ -78,7 +78,7 @@ const WishlistPage = () => {
                         </p>
                         <Link 
                             to="/listings" 
-                            className="inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 text-white font-medium text-sm rounded-xl hover:bg-blue-700 transition-colors"
+                            className="inline-flex items-center justify-center px-6 py-2.5 bg-emerald-600 text-white font-medium text-sm rounded-xl hover:bg-emerald-700 transition-colors"
                         >
                             Browse Vehicles
                         </Link>

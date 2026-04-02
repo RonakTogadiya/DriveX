@@ -52,7 +52,7 @@ const Inbox = () => {
                                     key={chat.roomId}
                                     onClick={() => setSelectedRoom(chat)}
                                     className={`w-full text-left p-4 border-b border-slate-100 transition-colors
-                                        ${selectedRoom?.roomId === chat.roomId ? 'bg-blue-50/50 border-l-4 border-l-blue-600' : 'hover:bg-slate-50 border-l-4 border-l-transparent'}`}
+                                        ${selectedRoom?.roomId === chat.roomId ? 'bg-emerald-50/50 border-l-4 border-l-emerald-600' : 'hover:bg-slate-50 border-l-4 border-l-transparent'}`}
                                 >
                                     <div className="flex items-center justify-between mb-1">
                                         <p className="font-semibold text-sm text-slate-800 truncate">
@@ -62,7 +62,7 @@ const Inbox = () => {
                                             {new Date(chat.lastMessage.timestamp).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <p className="text-xs text-blue-600 font-medium truncate mb-1">
+                                    <p className="text-xs text-emerald-600 font-medium truncate mb-1">
                                         🚗 {chat.listing.name}
                                     </p>
                                     <p className="text-xs text-slate-500 truncate">

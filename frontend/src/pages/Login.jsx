@@ -34,9 +34,9 @@ const Login = () => {
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-1.5 mb-6">
-                        <span className="text-blue-600 font-bold text-2xl">Drive</span>
+                        <span className="text-emerald-600 font-bold text-2xl">Drive</span>
                         <span className="text-slate-900 font-bold text-2xl">X</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                     </Link>
                     <h1 className="font-bold text-2xl text-slate-900">Sign In</h1>
                     <p className="text-slate-500 text-sm mt-1">Access your DriveX account</p>
@@ -49,17 +49,17 @@ const Login = () => {
                             <input id="email" name="email" type="email" value={form.email} onChange={handleChange}
                                 placeholder="you@email.com" required
                                 className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400
-                           focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+                           focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider" htmlFor="password">Password</label>
                             <input id="password" name="password" type="password" value={form.password} onChange={handleChange}
                                 placeholder="••••••••" required
                                 className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400
-                           focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+                           focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
                         </div>
                         <button type="submit" disabled={loading}
-                            className="bg-blue-600 text-white font-semibold text-sm mt-2 py-3 rounded-xl hover:bg-blue-700 transition-colors
+                            className="bg-emerald-600 text-white font-semibold text-sm mt-2 py-3 rounded-xl hover:bg-emerald-700 transition-colors
                                        disabled:opacity-50 flex items-center justify-center gap-2">
                             {loading ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Signing in...</> : 'Sign In'}
                         </button>
@@ -70,7 +70,7 @@ const Login = () => {
                     </div>
                     <p className="text-center text-slate-500 text-sm">
                         New to DriveX?{' '}
-                        <Link to="/register" className="text-blue-600 hover:underline font-semibold">Create Account →</Link>
+                        <Link to="/register" className="text-emerald-600 hover:underline font-semibold">Create Account →</Link>
                     </p>
                 </div>
             </div>
