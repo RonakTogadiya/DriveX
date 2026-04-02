@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getWishlist } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import VehicleCard from '../components/VehicleCard';
 import { Link } from 'react-router-dom';
@@ -13,11 +13,7 @@ const WishlistPage = () => {
     useEffect(() => {
         const fetchWishlist = async () => {
             try {
-                // Ensure auth token is set if not already handled perfectly by context
-                if (token) {
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                }
-                const { data } = await axios.get('/users/wishlist');
+                const { data } = await getWishlist();
                 if (data.success) {
                     setWishlist(data.data);
                 }

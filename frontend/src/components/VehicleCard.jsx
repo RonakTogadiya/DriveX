@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import { toggleWishlist } from '../services/api';
 
 const fuelBadge = {
     PETROL: 'bg-orange-50 text-orange-600 border-orange-200',
@@ -24,16 +24,29 @@ const VehicleCard = ({ listing }) => {
         id === listing._id || (typeof id === 'object' && id._id === listing._id)
     );
 
-    const toggleWishlist = async (e) => {
+    const handleToggleWishlist = async (e) => {
         e.stopPropagation();
         if (!user) return navigate('/login');
+
+        // Optimistic update
+        const prevWishlist = [...(user.wishlist || [])];
+        const newWishlist = isWishlisted 
+            ? prevWishlist.filter(item => 
+                (typeof item === 'object' ? item._id : item) !== listing._id
+              )
+            : [...prevWishlist, listing._id];
+
+        setUser({ ...user, wishlist: newWishlist });
+
         try {
-            const { data } = await axios.post(`/users/wishlist/${listing._id}`);
+            const { data } = await toggleWishlist(listing._id);
             if (data.success) {
                 setUser({ ...user, wishlist: data.data });
             }
         } catch (err) {
             console.error('Failed to toggle wishlist:', err);
+            // Revert on failure
+            setUser({ ...user, wishlist: prevWishlist });
         }
     };
 
@@ -72,7 +85,7 @@ const VehicleCard = ({ listing }) => {
 
                 {/* Wishlist Heart */}
                 <button 
-                    onClick={toggleWishlist}
+                    onClick={handleToggleWishlist}
                     className="absolute bottom-2.5 right-2.5 p-2 bg-white/80 hover:bg-white backdrop-blur-sm rounded-full shadow-sm transition-all active:scale-95 text-xl"
                     title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                 >
