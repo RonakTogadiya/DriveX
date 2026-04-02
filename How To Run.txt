@@ -1,0 +1,14 @@
+To Fill the database with default values
+
+1. Navigate to the backend folder
+2. Run the command "node seed.js"
+
+TO run the backend Server
+
+1. Navigate to the backend folder
+2. Run the command "npm run dev"
+
+To run the Frontend Server
+
+1. Navigate to the frontend folder
+2. Run the command "npm run dev"
