@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toggleWishlist } from '../services/api';
+import { getVehicleIcon } from '../utils/vehicleIcons';
 
 const fuelBadge = {
     PETROL: 'bg-orange-50 text-orange-600 border-orange-200',
@@ -18,6 +19,7 @@ const typeIcon = {
 const VehicleCard = ({ listing }) => {
     const navigate = useNavigate();
     const { user, setUser } = useAuth();
+    const [imgError, setImgError] = useState(false);
     
     // Check if listing is in user's wishlist
     const isWishlisted = user?.wishlist?.some(id => 
@@ -58,14 +60,19 @@ const VehicleCard = ({ listing }) => {
         >
             {/* ── Image ─────────────────────────────────────────────── */}
             <div className="h-44 bg-gray-100 flex items-center justify-center relative overflow-hidden border-b border-gray-100">
-                {listing.imageUrl ? (
+                {listing.imageUrl && !imgError ? (
                     <img
                         src={listing.imageUrl}
                         alt={listing.name}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={() => setImgError(true)}
                     />
                 ) : (
-                    <div className="text-6xl">{typeIcon[listing.type] || '🚗'}</div>
+                    <img 
+                        src={getVehicleIcon(listing.type)} 
+                        alt={listing.name} 
+                        className="w-16 h-16 object-contain opacity-50"
+                    />
                 )}
 
                 {/* Availability badge */}
