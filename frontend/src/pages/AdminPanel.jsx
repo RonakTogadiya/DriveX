@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { getAdminStats, getAllUsers, toggleBlockUser, verifyUser, getAllListings, verifyListing, getAllBookings, getAllPayments } from '../services/api';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip as ChartTooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import { useAuth } from '../context/AuthContext';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartTooltip, Legend);
 
 const AdminPanel = () => {
     const { user, loading: authLoading } = useAuth();
@@ -130,19 +133,29 @@ const AdminPanel = () => {
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                                     <h3 className="font-semibold text-slate-800 mb-6">Platform Activity Overview</h3>
                                     <div className="h-72">
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={[
-                                                { name: 'Users', count: stats.totalUsers },
-                                                { name: 'Listings', count: stats.totalListings },
-                                                { name: 'Bookings', count: stats.totalBookings },
-                                            ]}>
-                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13 }} dy={10} />
-                                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 13 }} />
-                                                <Tooltip cursor={{ fill: '#F1F5F9' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
-                                                <Bar dataKey="count" fill="#3B82F6" radius={[6, 6, 0, 0]} barSize={60} />
-                                            </BarChart>
-                                        </ResponsiveContainer>
+                                        <Bar
+                                            data={{
+                                                labels: ['Users', 'Listings', 'Bookings'],
+                                                datasets: [{
+                                                    label: 'Count',
+                                                    data: [stats.totalUsers, stats.totalListings, stats.totalBookings],
+                                                    backgroundColor: '#3B82F6',
+                                                    borderRadius: 6,
+                                                    barThickness: 60,
+                                                }],
+                                            }}
+                                            options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                plugins: {
+                                                    legend: { display: false },
+                                                },
+                                                scales: {
+                                                    x: { grid: { display: false } },
+                                                    y: { beginAtZero: true, grid: { color: '#E2E8F0' } },
+                                                },
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </>

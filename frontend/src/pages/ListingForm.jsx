@@ -16,6 +16,20 @@ const EMPTY_FORM = {
     location: { address: '', city: '', country: '' },
 };
 
+const inputClass = "bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all";
+const labelClass = "text-xs font-semibold text-slate-500 uppercase tracking-wider";
+
+const InputField = ({ label, name, type = 'text', placeholder, required, min, max, step, value, onChange }) => {
+    return (
+        <div className="flex flex-col gap-1.5">
+            <label className={labelClass} htmlFor={name}>{label}</label>
+            <input id={name} name={name} type={type} value={value} onChange={onChange}
+                placeholder={placeholder} required={required} min={min} max={max} step={step}
+                className={inputClass} />
+        </div>
+    );
+};
+
 const ListingForm = () => {
     const { id } = useParams();
     const isEdit = Boolean(id);
@@ -53,6 +67,14 @@ const ListingForm = () => {
         }
     };
 
+    const getFieldValue = (name) => {
+        if (name.startsWith('location.')) {
+            const key = name.split('.')[1];
+            return form.location[key];
+        }
+        return form[name];
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -75,23 +97,6 @@ const ListingForm = () => {
 
     if (fetching) return <div className="min-h-screen flex items-center justify-center text-emerald-600 animate-pulse">Loading...</div>;
 
-    const inputClass = "bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all";
-    const labelClass = "text-xs font-semibold text-slate-500 uppercase tracking-wider";
-
-    const InputField = ({ label, name, type = 'text', placeholder, required, min, max, step }) => {
-        const isLocation = name.startsWith('location.');
-        const key = isLocation ? name.split('.')[1] : name;
-        const value = isLocation ? form.location[key] : form[key];
-        return (
-            <div className="flex flex-col gap-1.5">
-                <label className={labelClass} htmlFor={name}>{label}</label>
-                <input id={name} name={name} type={type} value={value} onChange={handle}
-                    placeholder={placeholder} required={required} min={min} max={max} step={step}
-                    className={inputClass} />
-            </div>
-        );
-    };
-
     return (
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">
             <div className="max-w-2xl mx-auto">
@@ -106,7 +111,7 @@ const ListingForm = () => {
                     <div>
                         <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">01 — Vehicle Info</h2>
                         <div className="grid gap-4">
-                            <InputField label="Listing Title *" name="name" placeholder="e.g. Toyota Fortuner 2022" required />
+                            <InputField label="Listing Title *" name="name" placeholder="e.g. Toyota Fortuner 2022" required value={getFieldValue('name')} onChange={handle} />
                             <div className="flex flex-col gap-1.5">
                                 <label className={labelClass}>Vehicle Type *</label>
                                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
@@ -132,12 +137,12 @@ const ListingForm = () => {
                     <div>
                         <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">02 — Specifications</h2>
                         <div className="grid grid-cols-2 gap-4">
-                            <InputField label="Brand *" name="brand" placeholder="Toyota" required />
-                            <InputField label="Model *" name="model" placeholder="Fortuner" required />
-                            <InputField label="Year *" name="year" type="number" min="1990" max={new Date().getFullYear() + 1} required />
-                            <InputField label="Seats *" name="seats" type="number" min="1" max="50" required />
-                            <InputField label="Mileage (km)" name="mileage" type="number" min="0" placeholder="e.g. 25000" />
-                            <InputField label="Image URL" name="imageUrl" placeholder="https://..." />
+                            <InputField label="Brand *" name="brand" placeholder="Toyota" required value={getFieldValue('brand')} onChange={handle} />
+                            <InputField label="Model *" name="model" placeholder="Fortuner" required value={getFieldValue('model')} onChange={handle} />
+                            <InputField label="Year *" name="year" type="number" min="1990" max={new Date().getFullYear() + 1} required value={getFieldValue('year')} onChange={handle} />
+                            <InputField label="Seats *" name="seats" type="number" min="1" max="50" required value={getFieldValue('seats')} onChange={handle} />
+                            <InputField label="Mileage (km)" name="mileage" type="number" min="0" placeholder="e.g. 25000" value={getFieldValue('mileage')} onChange={handle} />
+                            <InputField label="Image URL" name="imageUrl" placeholder="https://..." value={getFieldValue('imageUrl')} onChange={handle} />
 
                             <div className="flex flex-col gap-1.5">
                                 <label className={labelClass}>Fuel Type</label>
@@ -167,8 +172,8 @@ const ListingForm = () => {
                     <div>
                         <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">03 — Pricing</h2>
                         <div className="grid grid-cols-2 gap-4">
-                            <InputField label="Standard Price/Day (₹) *" name="pricePerDay" type="number" min="1" step="1" placeholder="e.g. 2500" required />
-                            <InputField label="Weekend Price/Day (₹)" name="weekendPrice" type="number" min="1" step="1" placeholder="Optional (e.g. 3000)" />
+                            <InputField label="Standard Price/Day (₹) *" name="pricePerDay" type="number" min="1" step="1" placeholder="e.g. 2500" required value={getFieldValue('pricePerDay')} onChange={handle} />
+                            <InputField label="Weekend Price/Day (₹)" name="weekendPrice" type="number" min="1" step="1" placeholder="Optional (e.g. 3000)" value={getFieldValue('weekendPrice')} onChange={handle} />
                         </div>
                     </div>
 
@@ -176,9 +181,9 @@ const ListingForm = () => {
                     <div>
                         <h2 className="text-xs text-emerald-600 font-semibold uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">04 — Location</h2>
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="col-span-2"><InputField label="Address" name="location.address" placeholder="Street / Area" /></div>
-                            <InputField label="City" name="location.city" placeholder="Mumbai" />
-                            <InputField label="Country" name="location.country" placeholder="India" />
+                            <div className="col-span-2"><InputField label="Address" name="location.address" placeholder="Street / Area" value={getFieldValue('location.address')} onChange={handle} /></div>
+                            <InputField label="City" name="location.city" placeholder="Mumbai" value={getFieldValue('location.city')} onChange={handle} />
+                            <InputField label="Country" name="location.country" placeholder="India" value={getFieldValue('location.country')} onChange={handle} />
                         </div>
                     </div>
 

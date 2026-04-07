@@ -69,14 +69,14 @@ const MyListings = () => {
 
                 {!loading && listings.length > 0 && (
                     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                        <div className="hidden md:grid grid-cols-[64px_1fr_100px_100px_100px_120px] gap-4 px-5 py-3 border-b border-gray-100">
-                            {['', 'Vehicle', 'Type', 'Price/Day', 'Status', 'Actions'].map(h => (
+                        <div className="hidden md:grid grid-cols-[64px_1fr_80px_80px_100px_100px_120px] gap-4 px-5 py-3 border-b border-gray-100">
+                            {['', 'Vehicle', 'Type', 'City', 'Price/Day', 'Status', 'Actions'].map(h => (
                                 <span key={h} className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{h}</span>
                             ))}
                         </div>
                         {listings.map((l, idx) => (
                             <div key={l._id}
-                                className={`grid grid-cols-1 md:grid-cols-[64px_1fr_100px_100px_100px_120px] gap-4 px-5 py-4 items-center
+                                className={`grid grid-cols-1 md:grid-cols-[64px_1fr_80px_80px_100px_100px_120px] gap-4 px-5 py-4 items-center
                   ${idx % 2 === 0 ? '' : 'bg-slate-50/50'} hover:bg-emerald-50/40 transition-colors`}>
                                 <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
                                     {l.imageUrl
@@ -88,6 +88,7 @@ const MyListings = () => {
                                     <p className="text-slate-400 text-xs">{l.brand} {l.model} · {l.year}</p>
                                 </div>
                                 <span className="text-slate-500 text-sm hidden md:block">{l.type}</span>
+                                <span className="text-slate-500 text-sm hidden md:block truncate">{l.location?.city || '—'}</span>
                                 <span className="text-emerald-600 font-bold text-sm">₹{l.pricePerDay}<span className="text-slate-400 text-xs">/day</span></span>
                                 <div className="flex items-center gap-1.5">
                                     <span className={`w-2 h-2 rounded-full ${l.isAvailable ? 'bg-green-500' : 'bg-red-400'}`} />
