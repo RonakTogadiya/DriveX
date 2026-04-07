@@ -129,7 +129,7 @@ const AvailabilityCalendar = ({ listingId, isOwner, initialBookedStatus = [] }) 
                         <span className="w-3 h-3 rounded-full bg-black"></span> Booked
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <span className="w-3 h-3 rounded-full bg-red-100 border border-red-200"></span> Blocked {isOwner ? '(Click to toggle)' : ''}
+                        <span className="w-3 h-3 rounded-full bg-red-100 border border-red-200"></span> Holiday {isOwner ? '(Click to toggle)' : ''}
                     </div>
                     <div className="flex items-center gap-1.5">
                         <span className="w-3 h-3 rounded-full bg-white border border-gray-200"></span> Available
