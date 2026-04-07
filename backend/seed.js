@@ -33,7 +33,7 @@ const VEHICLES = [
         seats: 5, fuelType: 'PETROL', transmission: 'MANUAL', mileage: 23,
         pricePerDay: 1200,
         description: 'Fuel-efficient city hatchback. Perfect for daily commutes and weekend getaways. AC, music system included.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/54399/swift-exterior-right-front-three-quarter-63.jpeg?q=80',
+        imageUrl: '',
         location: { city: 'Mumbai', state: 'Maharashtra', country: 'India', coordinates: { type: 'Point', coordinates: [72.8777, 19.0760] } },
         isAvailable: true,
     },
