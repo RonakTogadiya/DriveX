@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getListings, deleteListing } from '../services/api';
 import toast from 'react-hot-toast';
@@ -9,9 +9,12 @@ const typeIcon = { CAR: '🚗', BIKE: '🏍️', SUV: '🚙', TRUCK: '🚛', VAN
 const MyListings = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
+    const [highlightedListingId, setHighlightedListingId] = useState(null);
+    const highlightRef = useRef(null);
 
     useEffect(() => {
         if (!user) { navigate('/login'); return; }
@@ -25,7 +28,22 @@ const MyListings = () => {
             finally { setLoading(false); }
         };
         fetch();
-    }, [user]);
+
+        // Check for listingId in URL for highlighting
+        const listingId = searchParams.get('listingId');
+        if (listingId) {
+            setHighlightedListingId(listingId);
+            const timer = setTimeout(() => setHighlightedListingId(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [user, searchParams]);
+
+    // Scroll to highlighted listing when data loads
+    useEffect(() => {
+        if (highlightedListingId && !loading && highlightRef.current) {
+            highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [highlightedListingId, loading]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Remove this vehicle from the marketplace?')) return;
@@ -76,8 +94,11 @@ const MyListings = () => {
                         </div>
                         {listings.map((l, idx) => (
                             <div key={l._id}
+                                ref={highlightedListingId === l._id ? highlightRef : null}
                                 className={`grid grid-cols-1 md:grid-cols-[64px_1fr_80px_80px_100px_100px_120px] gap-4 px-5 py-4 items-center
-                  ${idx % 2 === 0 ? '' : 'bg-slate-50/50'} hover:bg-emerald-50/40 transition-colors`}>
+                  ${idx % 2 === 0 ? '' : 'bg-slate-50/50'}
+                  ${highlightedListingId === l._id ? 'ring-2 ring-emerald-400 bg-emerald-50/60 animate-pulse' : ''}
+                  hover:bg-emerald-50/40 transition-colors`}>
                                 <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
                                     {l.imageUrl
                                         ? <img src={l.imageUrl} alt="" className="w-full h-full object-contain rounded-xl p-1" />

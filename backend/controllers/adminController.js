@@ -2,6 +2,20 @@ const User = require('../models/User');
 const Listing = require('../models/Listing');
 const Booking = require('../models/Booking');
 const Payment = require('../models/Payment');
+const Notification = require('../models/Notification');
+
+// Helper to send notification (same pattern as bookingController)
+const sendNotification = async (userId, type, message, relatedId) => {
+    try {
+        const notif = await Notification.create({ userId, type, message, relatedId });
+        const sockId = global.onlineUsers?.get(userId.toString());
+        if (sockId && global.io) {
+            global.io.to(sockId).emit('new_notification', notif);
+        }
+    } catch (err) {
+        console.error('Failed to send admin notification', err);
+    }
+};
 
 /**
  * @desc    Get dashboard statistics for admin
@@ -81,6 +95,17 @@ const verifyUser = async (req, res, next) => {
 
         user.isVerified = !user.isVerified;
         await user.save();
+
+        // Send notification to user about verification status change
+        if (user.isVerified) {
+            await sendNotification(
+                user._id,
+                'USER_VERIFIED',
+                'Your account has been verified! You can now list vehicles on DriveX.',
+                user._id
+            );
+        }
+
         res.json({ success: true, message: `User verification changed to ${user.isVerified}`, data: user });
     } catch (err) {
         next(err);
@@ -118,6 +143,22 @@ const verifyListing = async (req, res, next) => {
 
         listing.verificationStatus = status;
         await listing.save();
+
+        // Send notification to owner about listing status change
+        if (listing.owner && (status === 'APPROVED' || status === 'REJECTED')) {
+            const notifType = status === 'APPROVED' ? 'LISTING_APPROVED' : 'LISTING_REJECTED';
+            const notifMessage = status === 'APPROVED'
+                ? `Your vehicle "${listing.name}" has been approved and is now live on DriveX!`
+                : `Your vehicle "${listing.name}" has been rejected by admin. Please review and resubmit.`;
+
+            await sendNotification(
+                listing.owner,
+                notifType,
+                notifMessage,
+                listing._id
+            );
+        }
+
         res.json({ success: true, message: `Listing marked as ${status}`, data: listing });
     } catch (err) {
         next(err);

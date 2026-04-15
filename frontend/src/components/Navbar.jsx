@@ -40,6 +40,47 @@ const Navbar = () => {
 
     const isActive = (path) => location.pathname === path;
 
+    // Handle clicking a notification — mark as read and navigate to relevant page
+    const handleNotificationClick = (notification) => {
+        // Mark as read if unread
+        if (!notification.read) {
+            markAsRead(notification._id);
+        }
+
+        // Close dropdown
+        setNotifOpen(false);
+
+        // Navigate based on notification type and relatedId
+        const relatedId = notification.relatedId;
+        switch (notification.type) {
+            case 'CHAT':
+                navigate(`/inbox?listingId=${relatedId}`);
+                break;
+            case 'BOOKING':
+            case 'REMINDER':
+                // Owner goes to owner-dashboard, renter goes to dashboard
+                if (user?.role === 'owner') {
+                    navigate(`/owner-dashboard?bookingId=${relatedId}`);
+                } else {
+                    navigate(`/dashboard?bookingId=${relatedId}`);
+                }
+                break;
+            case 'PAYMENT':
+                navigate(`/dashboard?bookingId=${relatedId}`);
+                break;
+            case 'LISTING_APPROVED':
+            case 'LISTING_REJECTED':
+                navigate(`/my-listings?listingId=${relatedId}`);
+                break;
+            case 'USER_VERIFIED':
+                navigate('/dashboard');
+                break;
+            default:
+                navigate('/dashboard');
+                break;
+        }
+    };
+
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -97,23 +138,40 @@ const Navbar = () => {
                                             {notifications.length === 0 ? (
                                                 <div className="p-6 text-center text-slate-500 text-sm">No new notifications</div>
                                             ) : (
-                                                notifications.map(n => (
-                                                    <div
-                                                        key={n._id}
-                                                        onClick={() => { if (!n.read) markAsRead(n._id); }}
-                                                        className={`p-4 border-b border-slate-100 cursor-pointer transition-colors ${!n.read ? 'bg-emerald-50/30 hover:bg-emerald-50/50' : 'hover:bg-slate-50'}`}
-                                                    >
-                                                        <div className="flex items-start gap-3">
-                                                            <span className="text-xl shrink-0 mt-0.5">{n.type === 'CHAT' ? '💬' : '📅'}</span>
-                                                            <div>
-                                                                <p className={`text-sm ${!n.read ? 'text-slate-900 font-medium' : 'text-slate-600'}`}>{n.message}</p>
-                                                                <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-wider">
-                                                                    {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
-                                                                </p>
+                                                notifications.map(n => {
+                                                    // Icon mapping for all notification types
+                                                    const iconMap = {
+                                                        CHAT: '💬',
+                                                        BOOKING: '📅',
+                                                        REMINDER: '⏰',
+                                                        PAYMENT: '💳',
+                                                        LISTING_APPROVED: '✅',
+                                                        LISTING_REJECTED: '❌',
+                                                        USER_VERIFIED: '🎉',
+                                                    };
+                                                    const icon = iconMap[n.type] || '🔔';
+
+                                                    return (
+                                                        <div
+                                                            key={n._id}
+                                                            onClick={() => handleNotificationClick(n)}
+                                                            className={`p-4 border-b border-slate-100 cursor-pointer transition-colors ${!n.read ? 'bg-emerald-50/30 hover:bg-emerald-50/50' : 'hover:bg-slate-50'}`}
+                                                        >
+                                                            <div className="flex items-start gap-3">
+                                                                <span className="text-xl shrink-0 mt-0.5">{icon}</span>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <p className={`text-sm ${!n.read ? 'text-slate-900 font-medium' : 'text-slate-600'}`}>{n.message}</p>
+                                                                    <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-wider">
+                                                                        {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                                                                    </p>
+                                                                </div>
+                                                                <svg className="w-4 h-4 text-slate-300 shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                                </svg>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                ))
+                                                    );
+                                                })
                                             )}
                                         </div>
                                     </div>

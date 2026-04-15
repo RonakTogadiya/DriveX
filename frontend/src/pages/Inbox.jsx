@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMyInbox } from '../services/api';
 import ChatBox from '../components/ChatBox';
@@ -7,6 +7,7 @@ import ChatBox from '../components/ChatBox';
 const Inbox = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [inbox, setInbox] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedRoom, setSelectedRoom] = useState(null);
@@ -16,7 +17,15 @@ const Inbox = () => {
         const fetchInbox = async () => {
             try {
                 const { data } = await getMyInbox();
-                setInbox(data.data || []);
+                const rooms = data.data || [];
+                setInbox(rooms);
+
+                // Auto-select chat room if listingId is in the URL (from notification click)
+                const listingId = searchParams.get('listingId');
+                if (listingId && rooms.length > 0) {
+                    const matching = rooms.find(chat => chat.listing?.id === listingId);
+                    if (matching) setSelectedRoom(matching);
+                }
             } catch (error) {
                 console.error('Error fetching inbox:', error);
             } finally {
@@ -24,7 +33,7 @@ const Inbox = () => {
             }
         };
         fetchInbox();
-    }, [user, navigate]);
+    }, [user, navigate, searchParams]);
 
     return (
         <div className="min-h-screen bg-slate-50 pt-24 pb-16 px-4">

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMyBookings, cancelBooking, downloadReceipt } from '../services/api';
 import { format, isFuture } from 'date-fns';
@@ -15,9 +15,12 @@ const STATUS_CONFIG = {
 const Dashboard = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [cancelModal, setCancelModal] = useState({ isOpen: false, bookingId: null, reason: '', loading: false });
+    const [highlightedBookingId, setHighlightedBookingId] = useState(null);
+    const highlightRef = useRef(null);
 
     useEffect(() => {
         if (!user) { navigate('/login'); return; }
@@ -29,7 +32,23 @@ const Dashboard = () => {
             finally { setLoading(false); }
         };
         fetch();
-    }, [user, navigate]);
+
+        // Check for bookingId in URL for highlighting
+        const bookingId = searchParams.get('bookingId');
+        if (bookingId) {
+            setHighlightedBookingId(bookingId);
+            // Auto-clear highlight after 5 seconds
+            const timer = setTimeout(() => setHighlightedBookingId(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [user, navigate, searchParams]);
+
+    // Scroll to highlighted booking when data loads
+    useEffect(() => {
+        if (highlightedBookingId && !loading && highlightRef.current) {
+            highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [highlightedBookingId, loading]);
 
     const handleCancelClick = (bookingId) => {
         setCancelModal({ isOpen: true, bookingId, reason: '', loading: false });
@@ -119,8 +138,10 @@ const Dashboard = () => {
                                 const canCancel = ['PENDING', 'CONFIRMED'].includes(booking.status) && isFuture(new Date(booking.startDate));
                                 return (
                                     <div key={booking._id}
+                                        ref={highlightedBookingId === booking._id ? highlightRef : null}
                                         className={`grid grid-cols-1 md:grid-cols-[1fr_120px_160px_100px_100px_80px] gap-3 md:gap-4 px-5 py-4 items-center
                       ${idx % 2 === 0 ? '' : 'bg-slate-50/50'}
+                      ${highlightedBookingId === booking._id ? 'ring-2 ring-emerald-400 bg-emerald-50/60 animate-pulse' : ''}
                       hover:bg-emerald-50/40 transition-colors duration-150`}>
                                         <div className="flex items-center gap-3 min-w-0">
                                             <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0 text-sm">

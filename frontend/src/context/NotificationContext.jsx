@@ -54,6 +54,16 @@ export const NotificationProvider = ({ children }) => {
                 toast.success(data.message, { icon: '💬' });
             } else if (data.type === 'BOOKING') {
                 toast.success(data.message, { icon: '📅' });
+            } else if (data.type === 'PAYMENT') {
+                toast.success(data.message, { icon: '💳' });
+            } else if (data.type === 'LISTING_APPROVED') {
+                toast.success(data.message, { icon: '✅' });
+            } else if (data.type === 'LISTING_REJECTED') {
+                toast(data.message, { icon: '❌' });
+            } else if (data.type === 'USER_VERIFIED') {
+                toast.success(data.message, { icon: '🎉' });
+            } else if (data.type === 'REMINDER') {
+                toast(data.message, { icon: '⏰' });
             } else {
                 toast(data.message);
             }

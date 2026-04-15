@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getOwnerBookings, confirmBooking, rejectBooking } from '../services/api';
 import { format } from 'date-fns';
@@ -16,14 +16,32 @@ const STATUS_CONFIG = {
 const OwnerDashboard = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(null); // stores booking ID being acted upon
+    const [highlightedBookingId, setHighlightedBookingId] = useState(null);
+    const highlightRef = useRef(null);
 
     useEffect(() => {
         if (!user || user.role !== 'owner') { navigate('/'); return; }
         fetchBookings();
-    }, [user, navigate]);
+
+        // Check for bookingId in URL for highlighting
+        const bookingId = searchParams.get('bookingId');
+        if (bookingId) {
+            setHighlightedBookingId(bookingId);
+            const timer = setTimeout(() => setHighlightedBookingId(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [user, navigate, searchParams]);
+
+    // Scroll to highlighted booking when data loads
+    useEffect(() => {
+        if (highlightedBookingId && !loading && highlightRef.current) {
+            highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [highlightedBookingId, loading]);
 
     const fetchBookings = async () => {
         try {
@@ -114,7 +132,11 @@ const OwnerDashboard = () => {
                             {bookings.map((booking) => {
                                 const status = STATUS_CONFIG[booking.status] || STATUS_CONFIG.PENDING;
                                 return (
-                                    <div key={booking._id} className="p-5 hover:bg-slate-50/50 transition-colors flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                                    <div key={booking._id}
+                                        ref={highlightedBookingId === booking._id ? highlightRef : null}
+                                        className={`p-5 hover:bg-slate-50/50 transition-colors flex flex-col md:flex-row gap-4 items-start md:items-center justify-between
+                                            ${highlightedBookingId === booking._id ? 'ring-2 ring-emerald-400 bg-emerald-50/60 animate-pulse' : ''}`}
+                                    >
                                         <div className="flex gap-4 items-center min-w-0 flex-1">
                                             {booking.listing?.imageUrl ? (
                                                 <img src={booking.listing.imageUrl} alt="" className="w-16 h-12 rounded-lg object-cover bg-gray-100" />
