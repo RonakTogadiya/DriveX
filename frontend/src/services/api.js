@@ -22,6 +22,8 @@ export const createListing = (data) => api.post('/listings', data);
 export const updateListing = (id, data) => api.put(`/listings/${id}`, data);
 export const deleteListing = (id) => api.delete(`/listings/${id}`);
 export const getNearbyListings = (params) => api.get('/listings/nearby', { params });
+export const toggleListingStatus = (id) => api.patch(`/listings/${id}/toggle-status`);
+export const getMyListings = () => api.get('/listings/my-listings');
 
 // ── Bookings ──────────────────────────────────────────────────────────
 export const createBooking = (data) => api.post('/bookings', data);

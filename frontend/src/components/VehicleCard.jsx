@@ -76,13 +76,32 @@ const VehicleCard = ({ listing }) => {
                 )}
 
                 {/* Availability badge */}
-                <div className={`absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold
-                         ${listing.isAvailable
-                        ? 'bg-green-50 text-green-700 border border-green-200'
-                        : 'bg-red-50 text-red-600 border border-red-200'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${listing.isAvailable ? 'bg-green-500 animate-pulse' : 'bg-red-400'}`} />
-                    {listing.isAvailable ? 'Available' : 'Booked'}
-                </div>
+                {(() => {
+                    const isActive = !listing.status || listing.status === 'ACTIVE';
+                    const available = listing.isAvailable;
+                    let badgeClass, dotClass, label;
+
+                    if (!isActive) {
+                        badgeClass = 'bg-amber-50 text-amber-600 border border-amber-200';
+                        dotClass = 'bg-amber-400';
+                        label = '🔧 Maintenance';
+                    } else if (!available) {
+                        badgeClass = 'bg-red-50 text-red-600 border border-red-200';
+                        dotClass = 'bg-red-400';
+                        label = 'Booked';
+                    } else {
+                        badgeClass = 'bg-green-50 text-green-700 border border-green-200';
+                        dotClass = 'bg-green-500 animate-pulse';
+                        label = 'Available';
+                    }
+
+                    return (
+                        <div className={`absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold ${badgeClass}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${dotClass}`} />
+                            {label}
+                        </div>
+                    );
+                })()}
 
                 {/* Fuel badge */}
                 <div className={`absolute top-2.5 right-2.5 text-[9px] font-bold uppercase tracking-wide

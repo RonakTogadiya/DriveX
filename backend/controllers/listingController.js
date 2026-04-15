@@ -15,10 +15,13 @@ const getListings = async (req, res, next) => {
         } = req.query;
 
         // Start with approved listings only for public search
-        let queryStr = { verificationStatus: 'APPROVED', ...req.query };
+        let queryStr = {
+            ...req.query,
+            verificationStatus: 'APPROVED',
+        };
 
         // Fields to exclude from normal filtering (they are handled explicitly below)
-        const removeFields = ['select', 'sort', 'order', 'page', 'limit', 'search', 'startDate', 'endDate', 'type', 'fuelType', 'transmission', 'city', 'seats', 'minPrice', 'maxPrice'];
+        const removeFields = ['select', 'sort', 'order', 'page', 'limit', 'search', 'startDate', 'endDate', 'type', 'fuelType', 'transmission', 'city', 'seats', 'minPrice', 'maxPrice', 'status', 'verificationStatus'];
 
         // Loop over removeFields and delete them from queryStr
         removeFields.forEach(param => delete queryStr[param]);
@@ -31,7 +34,12 @@ const getListings = async (req, res, next) => {
         });
 
         // Basic filtering (type, fuelType, transmission, city, seats)
-        const query = { ...queryStr };
+        const query = {
+            ...queryStr,
+            verificationStatus: 'APPROVED',
+            // Exclude MAINTENANCE/HIDDEN vehicles. $nin also matches docs where status doesn't exist.
+            status: { $nin: ['MAINTENANCE', 'HIDDEN'] },
+        };
 
         if (search) {
             const searchRegex = { $regex: search, $options: 'i' };
@@ -217,4 +225,45 @@ const getNearbyListings = async (req, res, next) => {
     }
 };
 
-module.exports = { getListings, getListingById, createListing, updateListing, deleteListing, getNearbyListings, updateAvailability };
+/**
+ * @desc    Toggle listing status (ACTIVE <-> MAINTENANCE)
+ * @route   PATCH /api/listings/:id/toggle-status
+ * @access  Private (owner/admin)
+ */
+const toggleListingStatus = async (req, res, next) => {
+    try {
+        const listing = await Listing.findById(req.params.id);
+        if (!listing) return res.status(404).json({ success: false, message: 'Vehicle not found' });
+
+        const isOwner = listing.owner.toString() === req.user._id.toString();
+        if (!isOwner && req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+
+        // Toggle between ACTIVE and MAINTENANCE
+        listing.status = listing.status === 'ACTIVE' ? 'MAINTENANCE' : 'ACTIVE';
+        await listing.save();
+
+        res.json({ success: true, message: `Vehicle is now ${listing.status.toLowerCase()}`, data: listing });
+    } catch (error) {
+        next(error);
+    }
+};
+/**
+ * @desc    Get listings owned by logged-in user (all statuses)
+ * @route   GET /api/listings/my-listings
+ * @access  Private (owner)
+ */
+const getMyListings = async (req, res, next) => {
+    try {
+        const listings = await Listing.find({ owner: req.user._id })
+            .populate('owner', 'username email')
+            .sort({ createdAt: -1 });
+
+        res.json({ success: true, count: listings.length, data: listings });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { getListings, getListingById, createListing, updateListing, deleteListing, getNearbyListings, updateAvailability, toggleListingStatus, getMyListings };

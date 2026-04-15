@@ -3,17 +3,16 @@
  * Populates MongoDB with users, vehicle listings, and bookings (booked + available)
  * Run: node backend/seed.js
  */
-require('dotenv').config({ path: __dirname + '/.env' });
+
+require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Listing = require('./models/Listing');
 const Booking = require('./models/Booking');
+const Notification = require('./models/Notification');
+const Message = require('./models/Message');
 
-const MONGO_OPTIONS = {
-    serverSelectionTimeoutMS: 15000,
-    socketTimeoutMS: 45000,
-    family: 4,
-};
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/drivelink';
 
 // ── Test Users ─────────────────────────────────────────────────────────
 const USERS = [
@@ -27,289 +26,232 @@ const USERS = [
 
 // ── Vehicle Listings ───────────────────────────────────────────────────
 const VEHICLES = [
+    // Owner 1: rahulsharma (index 1)
     {
-        name: 'Maruti Swift 2023',
-        type: 'CAR', brand: 'Maruti Suzuki', model: 'Swift', year: 2023,
-        seats: 5, fuelType: 'PETROL', transmission: 'MANUAL', mileage: 23,
-        pricePerDay: 1200,
-        description: 'Fuel-efficient city hatchback. Perfect for daily commutes and weekend getaways. AC, music system included.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/54399/swift-exterior-right-front-three-quarter-63.jpeg?q=80',
-        location: { city: 'Mumbai', state: 'Maharashtra', country: 'India', coordinates: { type: 'Point', coordinates: [72.8777, 19.0760] } },
-        isAvailable: true,
+        ownerIdx: 1, name: 'Maruti Swift 2023', type: 'CAR', brand: 'Maruti Suzuki', model: 'Swift',
+        year: 2023, seats: 5, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 1200, weekendPrice: 1500,
+        mileage: 15000, description: 'Well-maintained Maruti Swift, perfect for city commuting.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/159099/swift-exterior-right-front-three-quarter.jpeg',
+        location: { address: 'Andheri West', city: 'Mumbai', country: 'India', coordinates: { type: 'Point', coordinates: [72.8362, 19.1364] } },
     },
     {
-        name: 'Hyundai Creta 2023',
-        type: 'SUV', brand: 'Hyundai', model: 'Creta', year: 2023,
-        seats: 5, fuelType: 'DIESEL', transmission: 'AUTOMATIC', mileage: 18,
-        pricePerDay: 2500,
-        description: 'Premium compact SUV with panoramic sunroof, ventilated seats, and ADAS safety suite.',
-        imageUrl: 'https://imgd.aeplcdn.com/642x336/n/cw/ec/106815/creta-exterior-right-front-three-quarter-6.png?isig=0&q=80',
-        location: { city: 'Bengaluru', state: 'Karnataka', country: 'India', coordinates: { type: 'Point', coordinates: [77.5946, 12.9716] } },
-        isAvailable: false, // BOOKED
+        ownerIdx: 1, name: 'Honda City 2022', type: 'CAR', brand: 'Honda', model: 'City',
+        year: 2022, seats: 5, fuelType: 'PETROL', transmission: 'AUTOMATIC', pricePerDay: 1800, weekendPrice: 2200,
+        mileage: 20000, description: 'Premium sedan with excellent mileage and comfort.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/134287/city-exterior-right-front-three-quarter-2.jpeg',
+        location: { address: 'Bandra East', city: 'Mumbai', country: 'India', coordinates: { type: 'Point', coordinates: [72.8520, 19.0596] } },
     },
     {
-        name: 'Royal Enfield Classic 350',
-        type: 'BIKE', brand: 'Royal Enfield', model: 'Classic 350', year: 2022,
-        seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', mileage: 35,
-        pricePerDay: 800,
-        description: 'Iconic cruiser for highway rides. Comes with helmet, saddle bags. Ideal for Goa and hill station trips.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/1/versions/--redditch1738919737719.jpg?q=80',
-        location: { city: 'Pune', state: 'Maharashtra', country: 'India', coordinates: { type: 'Point', coordinates: [73.8567, 18.5204] } },
-        isAvailable: true,
+        ownerIdx: 1, name: 'Bajaj Pulsar NS200', type: 'BIKE', brand: 'Bajaj', model: 'Pulsar NS200',
+        year: 2023, seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 600, weekendPrice: 750,
+        mileage: 8000, description: 'Sporty bike, great for weekend rides.',
+        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/174943/pulsar-ns200-right-side-view.jpeg',
+        location: { address: 'MG Road', city: 'Jaipur', country: 'India', coordinates: { type: 'Point', coordinates: [75.7873, 26.9124] } },
     },
     {
-        name: 'Toyota Fortuner 2022',
-        type: 'SUV', brand: 'Toyota', model: 'Fortuner', year: 2022,
-        seats: 7, fuelType: 'DIESEL', transmission: 'AUTOMATIC', mileage: 14,
-        pricePerDay: 5000,
-        description: 'Full-size 7-seater SUV. Ideal for family trips, corporate travel, and off-road adventures.',
-        imageUrl: 'https://www.team-bhp.com/forum/attachments/indian-car-scene/2106530d1610357107-rumour-next-gen-toyota-fortuner-coming-2022-fortunerexteriorrightfrontthreequarter19.jpeg',
-        location: { city: 'Delhi', state: 'Delhi', country: 'India', coordinates: { type: 'Point', coordinates: [77.1025, 28.7041] } },
-        isAvailable: true,
+        ownerIdx: 1, name: 'Royal Enfield Classic 350', type: 'BIKE', brand: 'Royal Enfield', model: 'Classic 350',
+        year: 2022, seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 800, weekendPrice: 1000,
+        mileage: 12000, description: 'Iconic cruiser bike for long highway trips.',
+        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/161917/classic-350-right-side-view-2.jpeg',
+        location: { address: 'Koregaon Park', city: 'Pune', country: 'India', coordinates: { type: 'Point', coordinates: [73.8930, 18.5367] } },
     },
     {
-        name: 'Honda City 2023',
-        type: 'CAR', brand: 'Honda', model: 'City', year: 2023,
-        seats: 5, fuelType: 'PETROL', transmission: 'AUTOMATIC', mileage: 18,
-        pricePerDay: 1800,
-        description: 'Sporty premium sedan with Honda Sensing safety, wireless Apple CarPlay/Android Auto.',
-        imageUrl: 'https://vroomhead.com/wp-content/uploads/2023/03/Ar_Vk_Honda-City_3TX_Front-3-4th-Studio-Shot_Golden-Brown-Metallic_V2-1-1024x683.jpg',
-        location: { city: 'Hyderabad', state: 'Telangana', country: 'India', coordinates: { type: 'Point', coordinates: [78.4867, 17.3850] } },
-        isAvailable: false, // BOOKED
+        ownerIdx: 1, name: 'Mahindra Thar 2023', type: 'SUV', brand: 'Mahindra', model: 'Thar',
+        year: 2023, seats: 4, fuelType: 'DIESEL', transmission: 'MANUAL', pricePerDay: 3500, weekendPrice: 4500,
+        mileage: 5000, description: 'Off-road beast, perfect for adventure trips.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter-49.jpeg',
+        location: { address: 'Sector 17', city: 'Chandigarh', country: 'India', coordinates: { type: 'Point', coordinates: [76.7794, 30.7415] } },
     },
     {
-        name: 'Tata Nexon EV 2023',
-        type: 'SUV', brand: 'Tata', model: 'Nexon EV', year: 2023,
-        seats: 5, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', mileage: 312,
-        pricePerDay: 2200,
-        description: "India's best-selling EV. 312km range, fast charging, panoramic roof. Zero emissions.",
-        imageUrl: 'https://images.hindustantimes.com/auto/img/2023/09/08/1600x900/2023_Tata_Nexon_EV_Facelift_new_1694104161565_1694160092028.jpg',
-        location: { city: 'Chennai', state: 'Tamil Nadu', country: 'India', coordinates: { type: 'Point', coordinates: [80.2707, 13.0827] } },
-        isAvailable: true,
+        ownerIdx: 1, name: 'Tata Nexon EV 2023', type: 'SUV', brand: 'Tata', model: 'Nexon EV',
+        year: 2023, seats: 5, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', pricePerDay: 2000, weekendPrice: 2500,
+        mileage: 10000, description: 'Electric SUV with 300km range. Eco-friendly choice!',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/141867/nexon-ev-exterior-right-front-three-quarter-3.jpeg',
+        location: { address: 'T. Nagar', city: 'Chennai', country: 'India', coordinates: { type: 'Point', coordinates: [80.2340, 13.0409] } },
+    },
+
+    // Owner 2: priyajoshi (index 2)
+    {
+        ownerIdx: 2, name: 'Hero Splendor Plus', type: 'BIKE', brand: 'Hero', model: 'Splendor Plus',
+        year: 2023, seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 350, weekendPrice: 450,
+        mileage: 5000, description: 'India\'s most trusted commuter bike. Excellent mileage.',
+        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/124399/splendor-plus-right-side-view.jpeg',
+        location: { address: 'Hazratganj', city: 'Lucknow', country: 'India', coordinates: { type: 'Point', coordinates: [80.9500, 26.8554] } },
     },
     {
-        name: 'Bajaj Pulsar NS200',
-        type: 'BIKE', brand: 'Bajaj', model: 'Pulsar NS200', year: 2023,
-        seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', mileage: 40,
-        pricePerDay: 600,
-        description: 'Sporty naked street bike. Great for quick city rides and weekend highway trips.',
-        imageUrl: 'https://www.bikeleague.in/wp-content/uploads/2023/08/NS-200-1.jpg',
-        location: { city: 'Jaipur', state: 'Rajasthan', country: 'India', coordinates: { type: 'Point', coordinates: [75.7873, 26.9124] } },
-        isAvailable: true,
+        ownerIdx: 2, name: 'Ola S1 Pro (Scooter)', type: 'SCOOTER', brand: 'Ola Electric', model: 'S1 Pro',
+        year: 2023, seats: 2, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', pricePerDay: 400, weekendPrice: 550,
+        mileage: 3000, description: 'Premium electric scooter with 170km range.',
+        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/121591/s1-pro-right-side-view.jpeg',
+        location: { address: 'Indiranagar', city: 'Bengaluru', country: 'India', coordinates: { type: 'Point', coordinates: [77.6408, 12.9784] } },
     },
     {
-        name: 'Kia Seltos 2023',
-        type: 'SUV', brand: 'Kia', model: 'Seltos', year: 2023,
-        seats: 5, fuelType: 'PETROL', transmission: 'AUTOMATIC', mileage: 16,
-        pricePerDay: 2800,
-        description: 'Feature-loaded SUV with 10.25" touchscreen, Bose audio, dual-tone exterior.',
-        imageUrl: 'https://www.team-bhp.com/sites/default/files/styles/amp_high_res/public/2023-kia-seltos-facelift-review.jpg',
-        location: { city: 'Ahmedabad', state: 'Gujarat', country: 'India', coordinates: { type: 'Point', coordinates: [72.5714, 23.0225] } },
-        isAvailable: false, // BOOKED
+        ownerIdx: 2, name: 'Kia Seltos 2023', type: 'SUV', brand: 'Kia', model: 'Seltos',
+        year: 2023, seats: 5, fuelType: 'PETROL', transmission: 'AUTOMATIC', pricePerDay: 2800, weekendPrice: 3500,
+        mileage: 8000, description: 'Feature-rich compact SUV with an advanced infotainment system.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/174323/seltos-exterior-right-front-three-quarter.jpeg',
+        location: { address: 'SG Highway', city: 'Ahmedabad', country: 'India', coordinates: { type: 'Point', coordinates: [72.5008, 23.0700] } },
     },
     {
-        name: 'Mahindra Thar 2022',
-        type: 'SUV', brand: 'Mahindra', model: 'Thar', year: 2022,
-        seats: 4, fuelType: 'DIESEL', transmission: 'MANUAL', mileage: 15,
-        pricePerDay: 3500,
-        description: 'Iconic off-road beast. Perfect for mountain treks, beach drives, and adventure trips.',
-        imageUrl: 'https://cdn-s3.autocarindia.com/Mahindra/thar/OP709550.JPG?w=640',
-        location: { city: 'Manali', state: 'Himachal Pradesh', country: 'India', coordinates: { type: 'Point', coordinates: [77.1892, 32.2396] } },
-        isAvailable: true,
+        ownerIdx: 2, name: 'Tata Nexon EV 2023', type: 'SUV', brand: 'Tata', model: 'Nexon EV',
+        year: 2023, seats: 5, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', pricePerDay: 2200, weekendPrice: 2800,
+        mileage: 6000, description: 'Electric SUV with great range and futuristic design.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/141867/nexon-ev-exterior-right-front-three-quarter-3.jpeg',
+        location: { address: 'Anna Nagar', city: 'Chennai', country: 'India', coordinates: { type: 'Point', coordinates: [80.2090, 13.0857] } },
     },
     {
-        name: 'Ola S1 Pro (Scooter)',
-        type: 'SCOOTER', brand: 'Ola Electric', model: 'S1 Pro', year: 2023,
-        seats: 2, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', mileage: 181,
-        pricePerDay: 400,
-        description: 'India\'s fastest electric scooter. 181km range, OTA updates, cruise control.',
-        imageUrl: 'https://catalog-management.s3.ap-south-1.amazonaws.com/htmobile1/olaelectric_s1-pro/images/exterior_olaelectric-s1-pro_front-left-view_600x400.jpg',
-        location: { city: 'Bengaluru', state: 'Karnataka', country: 'India', coordinates: { type: 'Point', coordinates: [77.5946, 12.9716] } },
-        isAvailable: true,
+        ownerIdx: 2, name: 'Toyota Fortuner 2022', type: 'SUV', brand: 'Toyota', model: 'Fortuner',
+        year: 2022, seats: 7, fuelType: 'DIESEL', transmission: 'AUTOMATIC', pricePerDay: 5000, weekendPrice: 6500,
+        mileage: 25000, description: 'Premium 7-seater SUV. Dominant presence and powerful engine.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/44709/fortuner-exterior-right-front-three-quarter-20.jpeg',
+        location: { address: 'Connaught Place', city: 'Delhi', country: 'India', coordinates: { type: 'Point', coordinates: [77.2167, 28.6328] } },
     },
     {
-        name: 'Ford Endeavour 2021',
-        type: 'SUV', brand: 'Ford', model: 'Endeavour', year: 2021,
-        seats: 7, fuelType: 'DIESEL', transmission: 'AUTOMATIC', mileage: 13,
-        pricePerDay: 4500,
-        description: 'Legendary 7-seater with Terrain Management System, perfect for any road condition.',
-        imageUrl: 'https://akm-img-a-in.tosshub.com/indiatoday/images/story/202002/Ford_Endeavour.jpeg',
-        location: { city: 'Mumbai', state: 'Maharashtra', country: 'India', coordinates: { type: 'Point', coordinates: [72.8779, 19.0775] } },
-        isAvailable: true,
-    },
-    {
-        name: 'Hero Splendor Plus',
-        type: 'BIKE', brand: 'Hero', model: 'Splendor Plus', year: 2023,
-        seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', mileage: 60,
-        pricePerDay: 350,
-        description: 'India\'s most fuel-efficient bike. Great for short daily commutes.',
-        imageUrl: 'https://cdn.bikedekho.com/processedimages/hero/splendor-plus-xtec/source/splendor-plus-xtec69721125c4bff.jpg?imwidth=412&impolicy=resize',
-        location: { city: 'Lucknow', state: 'Uttar Pradesh', country: 'India', coordinates: { type: 'Point', coordinates: [80.9462, 26.8467] } },
-        isAvailable: true,
+        ownerIdx: 2, name: 'Hyundai Creta 2023', type: 'SUV', brand: 'Hyundai', model: 'Creta',
+        year: 2023, seats: 5, fuelType: 'DIESEL', transmission: 'AUTOMATIC', pricePerDay: 2500, weekendPrice: 3200,
+        mileage: 10000, description: 'Feature-packed SUV with panoramic sunroof and ADAS.',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/106815/creta-exterior-right-front-three-quarter-5.jpeg',
+        location: { address: 'Whitefield', city: 'Bengaluru', country: 'India', coordinates: { type: 'Point', coordinates: [77.7500, 12.9698] } },
     },
 ];
 
-// ── Helpers ────────────────────────────────────────────────────────────
-const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d; };
+// ── Booking Templates ──────────────────────────────────────────────────
+// Each template references vehicle index, renter index, and defines the booking shape.
+const BOOKING_TEMPLATES = [
+    // ACTIVE bookings — happening right now
+    { vehicleIdx: 8, renterIdx: 3, startDaysFromNow: -2, endDaysFromNow: 5, status: 'ACTIVE', depositPaid: true, rentalPaid: true },
+    { vehicleIdx: 11, renterIdx: 3, startDaysFromNow: -1, endDaysFromNow: 5, status: 'ACTIVE', depositPaid: true, rentalPaid: true },
+
+    // CONFIRMED booking — upcoming
+    { vehicleIdx: 4, renterIdx: 4, startDaysFromNow: 3, endDaysFromNow: 7, status: 'CONFIRMED', depositPaid: true, rentalPaid: false },
+
+    // COMPLETED bookings — past
+    { vehicleIdx: 10, renterIdx: 4, startDaysFromNow: -10, endDaysFromNow: -7, status: 'COMPLETED', depositPaid: true, rentalPaid: true },
+    { vehicleIdx: 0, renterIdx: 5, startDaysFromNow: -15, endDaysFromNow: -12, status: 'COMPLETED', depositPaid: true, rentalPaid: true },
+
+    // CANCELLED booking
+    { vehicleIdx: 1, renterIdx: 3, startDaysFromNow: -5, endDaysFromNow: -2, status: 'CANCELLED', depositPaid: true, rentalPaid: false },
+
+    // PENDING booking — awaiting owner approval
+    { vehicleIdx: 6, renterIdx: 3, startDaysFromNow: 2, endDaysFromNow: 22, status: 'PENDING', depositPaid: false, rentalPaid: false },
+];
+
+// ── Helpers ─────────────────────────────────────────────────────────────
 const daysFromNow = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d; };
+
+const generateBlockedDates = (startDaysFromNow, endDaysFromNow) => {
+    const dates = [];
+    const current = daysFromNow(startDaysFromNow);
+    const end = daysFromNow(endDaysFromNow);
+    while (current <= end) {
+        dates.push(new Date(current));
+        current.setDate(current.getDate() + 1);
+    }
+    return dates;
+};
 
 async function seed() {
     console.log('\n🚀 DriveLink Seed Script Starting...\n');
 
     try {
         console.log('🔌 Connecting to MongoDB...');
-        await mongoose.connect(process.env.MONGO_URI, MONGO_OPTIONS);
-        console.log('✅ Connected to MongoDB!\n');
+        await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 10000, family: 4 });
+        console.log('✅ Connected!\n');
 
-        // ── Clear existing data ──────────────────────────────────────────
+        // ── Cleanup ──────────────────────────────────────────────────────
+        console.log('🗑  Clearing existing data...');
         await Promise.all([
-            Booking.deleteMany({}),
-            Listing.deleteMany({}),
             User.deleteMany({}),
+            Listing.deleteMany({}),
+            Booking.deleteMany({}),
+            Notification.deleteMany({}),
+            Message.deleteMany({}),
         ]);
-        console.log('🗑️  Cleared existing listings, bookings, and users\n');
+        console.log('✅ Collections cleared\n');
 
-        // ── Create users ─────────────────────────────────────────────────
+        // ── Users ────────────────────────────────────────────────────────
+        console.log('👤 Creating users...');
         const createdUsers = [];
         for (const u of USERS) {
             const user = await User.create({ ...u, isVerified: true });
-            console.log(`👤 Created ${u.role}: ${u.username} (${u.email}) | password: DriveLink@123`);
+            console.log(`   👤 Created ${u.role}: ${u.username} (${u.email}) | password: DriveLink@123`);
             createdUsers.push(user);
         }
-
-        const [admin1, owner1, owner2, renter1, renter2, renter3] = createdUsers;
         console.log('');
 
-        // ── Create Vehicle Listings ──────────────────────────────────────
+        // ── Listings ─────────────────────────────────────────────────────
+        console.log('🚗 Creating vehicle listings...');
         const createdListings = [];
-        for (let i = 0; i < VEHICLES.length; i++) {
-            const owner = i % 2 === 0 ? owner1 : owner2;
-            const listing = await Listing.create({ 
-                ...VEHICLES[i], 
-                owner: owner._id,
-                verificationStatus: 'APPROVED' 
+        for (const v of VEHICLES) {
+            const { ownerIdx, ...vehicleData } = v;
+            const listing = await Listing.create({
+                ...vehicleData,
+                owner: createdUsers[ownerIdx]._id,
+                isAvailable: true,
+                status: 'ACTIVE',
+                verificationStatus: 'APPROVED',
+                blockedDates: [],
             });
+            console.log(`   🚗 ${listing.name} (${listing.type}) → owner: ${USERS[ownerIdx].username} | ₹${listing.pricePerDay}/day`);
             createdListings.push(listing);
-            const tag = listing.isAvailable ? '🟢 Available' : '🔴 Booked';
-            console.log(`🚗 ${tag} | ${listing.name} — ₹${listing.pricePerDay}/day (${listing.location.city})`);
         }
         console.log('');
 
-        // ── Create Bookings ──────────────────────────────────────────────
-        // Booked vehicles: Creta (idx1), Honda City (idx4), Kia Seltos (idx7)
-        const bookings = [
-            // 1. ACTIVE booking — Creta, currently being used by amit
-            {
-                listing: createdListings[1]._id,  // Hyundai Creta — marked isAvailable:false
-                renter: renter1._id,
-                owner: owner2._id,
-                startDate: daysAgo(2),
-                endDate: daysFromNow(3),
-                totalDays: 5,
-                pricePerDay: createdListings[1].pricePerDay,
-                totalCost: createdListings[1].pricePerDay * 5,
-                status: 'ACTIVE',
-                pickupLocation: 'Bengaluru Airport, T1',
-                notes: 'Please keep fuel tank full on return.',
-            },
-            // 2. CONFIRMED booking — Honda City, upcoming trip by sneha
-            {
-                listing: createdListings[4]._id,  // Honda City — marked isAvailable:false
-                renter: renter2._id,
-                owner: owner1._id,
-                startDate: daysFromNow(2),
-                endDate: daysFromNow(6),
-                totalDays: 4,
-                pricePerDay: createdListings[4].pricePerDay,
-                totalCost: createdListings[4].pricePerDay * 4,
-                status: 'CONFIRMED',
-                pickupLocation: 'Hyderabad Jubilee Hills',
-                notes: 'Airport drop on last day needed.',
-            },
-            // 3. ACTIVE booking — Kia Seltos, currently used by vikram
-            {
-                listing: createdListings[7]._id,  // Kia Seltos — marked isAvailable:false
-                renter: renter3._id,
-                owner: owner2._id,
-                startDate: daysAgo(1),
-                endDate: daysFromNow(4),
-                totalDays: 5,
-                pricePerDay: createdListings[7].pricePerDay,
-                totalCost: createdListings[7].pricePerDay * 5,
-                status: 'ACTIVE',
-                pickupLocation: 'Ahmedabad SG Highway',
-                notes: 'Child seat requested.',
-            },
-            // 4. COMPLETED booking — Swift, amit's past trip
-            {
-                listing: createdListings[0]._id,  // Maruti Swift (still available, was booked before)
-                renter: renter1._id,
-                owner: owner1._id,
-                startDate: daysAgo(15),
-                endDate: daysAgo(12),
-                totalDays: 3,
-                pricePerDay: createdListings[0].pricePerDay,
-                totalCost: createdListings[0].pricePerDay * 3,
-                status: 'COMPLETED',
-                pickupLocation: 'Mumbai Bandra West',
-                notes: '',
-            },
-            // 5. COMPLETED booking — Fortuner, sneha's past trip
-            {
-                listing: createdListings[3]._id,  // Toyota Fortuner (available, was booked before)
-                renter: renter2._id,
-                owner: owner1._id,
-                startDate: daysAgo(20),
-                endDate: daysAgo(17),
-                totalDays: 3,
-                pricePerDay: createdListings[3].pricePerDay,
-                totalCost: createdListings[3].pricePerDay * 3,
-                status: 'COMPLETED',
-                pickupLocation: 'Delhi Connaught Place',
-                notes: '',
-            },
-            // 6. CANCELLED booking — Thar, vikram cancelled
-            {
-                listing: createdListings[8]._id,  // Mahindra Thar (available, cancelled booking)
-                renter: renter3._id,
-                owner: owner2._id,
-                startDate: daysAgo(5),
-                endDate: daysAgo(2),
-                totalDays: 3,
-                pricePerDay: createdListings[8].pricePerDay,
-                totalCost: createdListings[8].pricePerDay * 3,
-                status: 'CANCELLED',
-                pickupLocation: 'Manali Mall Road',
-                notes: 'Trip postponed due to weather.',
-            },
-            // 7. PENDING booking — RE Classic, sneha waiting for confirmation
-            {
-                listing: createdListings[2]._id,  // Royal Enfield (available)
-                renter: renter2._id,
-                owner: owner1._id,
-                startDate: daysFromNow(7),
-                endDate: daysFromNow(10),
-                totalDays: 3,
-                pricePerDay: createdListings[2].pricePerDay,
-                totalCost: createdListings[2].pricePerDay * 3,
-                status: 'PENDING',
-                pickupLocation: 'Pune Kothrud',
-                notes: 'Planning Lonavala trip.',
-            },
-        ];
+        // ── Bookings ─────────────────────────────────────────────────────
+        console.log('📅 Creating bookings...');
+        const bookings = [];
+        for (const tmpl of BOOKING_TEMPLATES) {
+            const listing = createdListings[tmpl.vehicleIdx];
+            const renter = createdUsers[tmpl.renterIdx];
+            const startDate = daysFromNow(tmpl.startDaysFromNow);
+            const endDate = daysFromNow(tmpl.endDaysFromNow);
+            const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const totalCost = totalDays * listing.pricePerDay;
 
-        for (const b of bookings) {
-            await Booking.create(b);
-            const listing = await Listing.findById(b.listing);
-            const renterUser = await User.findById(b.renter);
-            console.log(`📋 ${b.status.padEnd(10)} | ${listing?.name?.padEnd(28)} | ${renterUser?.username} | ₹${b.totalCost.toLocaleString()}`);
+            const bookingData = {
+                listing: listing._id,
+                renter: renter._id,
+                startDate,
+                endDate,
+                pricePerDay: listing.pricePerDay,
+                totalDays,
+                totalCost,
+                status: tmpl.status,
+                depositPaid: tmpl.depositPaid,
+                rentalPaid: tmpl.rentalPaid,
+                pickupLocation: listing.location?.address || '',
+            };
+
+            if (tmpl.status === 'CANCELLED') {
+                bookingData.cancelledAt = new Date();
+                bookingData.cancelReason = 'Cancelled by renter for testing';
+            }
+
+            const booking = await Booking.create(bookingData);
+            bookings.push(booking);
+
+            // Sync blockedDates for CONFIRMED and ACTIVE bookings
+            if (['CONFIRMED', 'ACTIVE'].includes(tmpl.status)) {
+                const blocked = generateBlockedDates(tmpl.startDaysFromNow, tmpl.endDaysFromNow);
+                await Listing.findByIdAndUpdate(listing._id, {
+                    $addToSet: { blockedDates: { $each: blocked } },
+                });
+            }
+
+            // Mark listing unavailable if booking is currently ACTIVE
+            if (tmpl.status === 'ACTIVE') {
+                await Listing.findByIdAndUpdate(listing._id, { isAvailable: false });
+            }
+
+            console.log(`   📅 ${listing.name} → ${USERS[tmpl.renterIdx].username} | ${tmpl.status} | ${totalDays} days | ₹${totalCost}`);
         }
 
-        console.log('\n✅ Seed complete!\n');
+        // ── Summary ──────────────────────────────────────────────────────
+        console.log('\n═══════════════════════════════════════════════════════');
+        console.log('✅ SEED COMPLETE');
         console.log('═══════════════════════════════════════════════════════');
-        console.log('📊 Summary:');
-        console.log(`   🚗 ${VEHICLES.length} vehicles (${VEHICLES.filter(v => v.isAvailable).length} available, ${VEHICLES.filter(v => !v.isAvailable).length} booked)`);
-        console.log(`   📋 ${bookings.length} bookings (2 ACTIVE, 1 CONFIRMED, 2 COMPLETED, 1 CANCELLED, 1 PENDING)`);
+        console.log(`   🚗 ${createdListings.length} vehicle listings (all APPROVED + ACTIVE)`);
+        console.log(`   📅 ${bookings.length} bookings (2 ACTIVE, 1 CONFIRMED, 2 COMPLETED, 1 CANCELLED, 1 PENDING)`);
         console.log(`   👤 ${USERS.length} users (1 admin, 2 owners, 3 renters)\n`);
         console.log('🔑 Test Login Credentials:');
         console.log('   Admin:  admin@drivelink.com  / DriveLink@123');
@@ -322,10 +264,7 @@ async function seed() {
         process.exit(0);
     } catch (err) {
         console.error('\n❌ Seed failed:', err.message);
-        if (err.message.includes('ENOTFOUND') || err.message.includes('ENODATA')) {
-            console.error('\n💡 Fix: Add your current IP to MongoDB Atlas Network Access:');
-            console.error('   atlas.mongodb.com → Network Access → Add IP Address → Allow From Anywhere (0.0.0.0/0)');
-        }
+        console.error(err.stack);
         process.exit(1);
     }
 }

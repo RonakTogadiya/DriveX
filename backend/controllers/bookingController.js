@@ -202,7 +202,23 @@ const cancelBooking = async (req, res, next) => {
         booking.cancelReason = req.body.reason || 'Cancelled by user';
         await booking.save();
 
+        // Sync blockedDates: remove the cancelled booking's dates from the listing
+        const datesToUnblock = [];
+        const current = new Date(booking.startDate);
+        const end = new Date(booking.endDate);
+        while (current <= end) {
+            datesToUnblock.push(new Date(current));
+            current.setDate(current.getDate() + 1);
+        }
         const populatedBooking = await Booking.findById(booking._id).populate('listing');
+        if (populatedBooking.listing) {
+            populatedBooking.listing.blockedDates = (populatedBooking.listing.blockedDates || []).filter(d => {
+                const dTime = new Date(d).getTime();
+                return !datesToUnblock.some(u => u.getTime() === dTime);
+            });
+            await populatedBooking.listing.save();
+        }
+
         const recipientId = isOwner ? populatedBooking.listing.owner : booking.renter;
 
         await sendNotification(
@@ -225,7 +241,7 @@ const cancelBooking = async (req, res, next) => {
  */
 const confirmBooking = async (req, res, next) => {
     try {
-        const booking = await Booking.findById(req.params.id).populate('listing', 'owner');
+        const booking = await Booking.findById(req.params.id).populate('listing', 'owner name');
         if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
 
         const isListingOwner = booking.listing.owner.toString() === req.user._id.toString();
@@ -235,6 +251,18 @@ const confirmBooking = async (req, res, next) => {
 
         booking.status = 'CONFIRMED';
         await booking.save();
+
+        // Sync blockedDates: add the booking's date range to the listing
+        const datesToBlock = [];
+        const current = new Date(booking.startDate);
+        const end = new Date(booking.endDate);
+        while (current <= end) {
+            datesToBlock.push(new Date(current));
+            current.setDate(current.getDate() + 1);
+        }
+        await Listing.findByIdAndUpdate(booking.listing._id, {
+            $addToSet: { blockedDates: { $each: datesToBlock } }
+        });
 
         await sendNotification(
             booking.renter,

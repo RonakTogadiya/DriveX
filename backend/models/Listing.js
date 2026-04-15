@@ -32,10 +32,13 @@ const VehicleSchema = new mongoose.Schema(
         owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         isAvailable: { type: Boolean, default: true },
         blockedDates: [{ type: Date }],
+        status: {
+            type: String,
+            enum: ['ACTIVE', 'MAINTENANCE', 'HIDDEN'],
+            default: 'ACTIVE',
+        },
 
-        // ── Status & Availability ─────────────────────────────────────────
-        isAvailable: { type: Boolean, default: true },
-        blockedDates: [{ type: Date }],
+        // ── Verification ──────────────────────────────────────────────────
         verificationStatus: {
             type: String,
             enum: ['PENDING', 'APPROVED', 'REJECTED'],
@@ -68,6 +71,7 @@ const VehicleSchema = new mongoose.Schema(
 VehicleSchema.index({ 'location.coordinates': '2dsphere' });
 VehicleSchema.index({ name: 'text', description: 'text', brand: 'text', model: 'text' });
 VehicleSchema.index({ type: 1, isAvailable: 1 });
+VehicleSchema.index({ status: 1 });
 VehicleSchema.index({ owner: 1 });
 
 module.exports = mongoose.model('Listing', VehicleSchema);

@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getListings, deleteListing } from '../services/api';
+import { getMyListings, deleteListing, toggleListingStatus } from '../services/api';
 import toast from 'react-hot-toast';
 
 const typeIcon = { CAR: '🚗', BIKE: '🏍️', SUV: '🚙', TRUCK: '🚛', VAN: '🚌', SCOOTER: '🛵' };
+
+const statusConfig = {
+    ACTIVE: { label: 'Active', color: 'bg-green-500', textColor: 'text-green-600', bg: 'bg-green-50' },
+    MAINTENANCE: { label: 'Maintenance', color: 'bg-amber-500', textColor: 'text-amber-600', bg: 'bg-amber-50' },
+    HIDDEN: { label: 'Hidden', color: 'bg-slate-400', textColor: 'text-slate-500', bg: 'bg-slate-50' },
+};
 
 const MyListings = () => {
     const { user } = useAuth();
@@ -13,21 +19,22 @@ const MyListings = () => {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deletingId, setDeletingId] = useState(null);
+    const [togglingId, setTogglingId] = useState(null);
     const [highlightedListingId, setHighlightedListingId] = useState(null);
     const highlightRef = useRef(null);
 
+    const fetchListings = async () => {
+        setLoading(true);
+        try {
+            const { data } = await getMyListings();
+            setListings(data.data || []);
+        } catch { toast.error('Failed to load listings'); }
+        finally { setLoading(false); }
+    };
+
     useEffect(() => {
         if (!user) { navigate('/login'); return; }
-        const fetch = async () => {
-            setLoading(true);
-            try {
-                const { data } = await getListings({ limit: 100 });
-                const mine = (data.data || []).filter(l => l.owner?._id === user._id || l.owner === user._id);
-                setListings(mine);
-            } catch { toast.error('Failed to load listings'); }
-            finally { setLoading(false); }
-        };
-        fetch();
+        fetchListings();
 
         // Check for listingId in URL for highlighting
         const listingId = searchParams.get('listingId');
@@ -55,6 +62,18 @@ const MyListings = () => {
         } catch (err) {
             toast.error(err.response?.data?.message || 'Delete failed');
         } finally { setDeletingId(null); }
+    };
+
+    const handleToggleStatus = async (id) => {
+        setTogglingId(id);
+        try {
+            const { data } = await toggleListingStatus(id);
+            // Update the listing in state
+            setListings(prev => prev.map(l => l._id === id ? { ...l, status: data.data.status } : l));
+            toast.success(data.message);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to toggle status');
+        } finally { setTogglingId(null); }
     };
 
     return (
@@ -87,15 +106,17 @@ const MyListings = () => {
 
                 {!loading && listings.length > 0 && (
                     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                        <div className="hidden md:grid grid-cols-[64px_1fr_80px_80px_100px_100px_120px] gap-4 px-5 py-3 border-b border-gray-100">
+                        <div className="hidden md:grid grid-cols-[64px_1fr_80px_80px_100px_100px_180px] gap-4 px-5 py-3 border-b border-gray-100">
                             {['', 'Vehicle', 'Type', 'City', 'Price/Day', 'Status', 'Actions'].map(h => (
                                 <span key={h} className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{h}</span>
                             ))}
                         </div>
-                        {listings.map((l, idx) => (
+                        {listings.map((l, idx) => {
+                            const st = statusConfig[l.status] || statusConfig.ACTIVE;
+                            return (
                             <div key={l._id}
                                 ref={highlightedListingId === l._id ? highlightRef : null}
-                                className={`grid grid-cols-1 md:grid-cols-[64px_1fr_80px_80px_100px_100px_120px] gap-4 px-5 py-4 items-center
+                                className={`grid grid-cols-1 md:grid-cols-[64px_1fr_80px_80px_100px_100px_180px] gap-4 px-5 py-4 items-center
                   ${idx % 2 === 0 ? '' : 'bg-slate-50/50'}
                   ${highlightedListingId === l._id ? 'ring-2 ring-emerald-400 bg-emerald-50/60 animate-pulse' : ''}
                   hover:bg-emerald-50/40 transition-colors`}>
@@ -112,21 +133,34 @@ const MyListings = () => {
                                 <span className="text-slate-500 text-sm hidden md:block truncate">{l.location?.city || '—'}</span>
                                 <span className="text-emerald-600 font-bold text-sm">₹{l.pricePerDay}<span className="text-slate-400 text-xs">/day</span></span>
                                 <div className="flex items-center gap-1.5">
-                                    <span className={`w-2 h-2 rounded-full ${l.isAvailable ? 'bg-green-500' : 'bg-red-400'}`} />
-                                    <span className="text-sm text-slate-500">{l.isAvailable ? 'Available' : 'Booked'}</span>
+                                    <span className={`w-2 h-2 rounded-full ${st.color}`} />
+                                    <span className={`text-sm ${st.textColor} font-medium`}>{st.label}</span>
                                 </div>
                                 <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleToggleStatus(l._id)}
+                                        disabled={togglingId === l._id}
+                                        className={`flex-1 text-center text-xs font-semibold py-1.5 rounded-lg transition-colors disabled:opacity-40
+                                            ${l.status === 'ACTIVE'
+                                                ? 'text-amber-600 border border-amber-200 hover:bg-amber-50'
+                                                : 'text-green-600 border border-green-200 hover:bg-green-50'
+                                            }`}
+                                        title={l.status === 'ACTIVE' ? 'Set to maintenance mode' : 'Re-activate listing'}
+                                    >
+                                        {togglingId === l._id ? '...' : l.status === 'ACTIVE' ? '⏸ Disable' : '▶ Enable'}
+                                    </button>
                                     <button onClick={() => navigate(`/listings/edit/${l._id}`)}
-                                        className="flex-1 text-center text-emerald-600 border border-emerald-200 text-xs font-semibold py-1.5 rounded-lg hover:bg-emerald-50 transition-colors">
-                                        ✏️ Edit
+                                        className="text-center text-emerald-600 border border-emerald-200 text-xs font-semibold py-1.5 px-2 rounded-lg hover:bg-emerald-50 transition-colors">
+                                        ✏️
                                     </button>
                                     <button onClick={() => handleDelete(l._id)} disabled={deletingId === l._id}
-                                        className="flex-1 text-center text-red-500 border border-red-200 text-xs font-semibold py-1.5 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-40">
+                                        className="text-center text-red-500 border border-red-200 text-xs font-semibold py-1.5 px-2 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-40">
                                         {deletingId === l._id ? '...' : '🗑'}
                                     </button>
                                 </div>
                             </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
