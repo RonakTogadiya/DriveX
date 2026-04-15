@@ -19,10 +19,10 @@ const AboutUs = () => {
                 {/* 3. Platform Statistics */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     {[
-                        { label: 'Active Vehicles', value: '1,200+' },
-                        { label: 'Happy Customers', value: '25,000+' },
-                        { label: 'Cities Covered', value: '45+' },
-                        { label: 'Total Trips', value: '100,000+' },
+                        { label: 'Active Vehicles', value: '10+' },
+                        { label: 'Happy Customers', value: '20+' },
+                        { label: 'Cities Covered', value: '5+' },
+                        { label: 'Total Trips', value: '10+' },
                     ].map((stat, i) => (
                         <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                             <p className="text-3xl font-bold text-emerald-600 mb-1">{stat.value}</p>
@@ -82,10 +82,10 @@ const AboutUs = () => {
                     <p className="text-emerald-100 mb-6">Have questions? We're here to help.</p>
                     <div className="flex flex-col md:flex-row justify-center gap-6 text-sm">
                         <div className="flex items-center justify-center gap-2">
-                            <span>📧</span> support@drivelink.com
+                            <span>📧</span> vasubhoraniya7908@gmail.com
                         </div>
                         <div className="flex items-center justify-center gap-2">
-                            <span>📞</span> +91 98765 43210
+                            <span>📞</span> +91 7405555555
                         </div>
                         <div className="flex items-center justify-center gap-2">
                             <span>📍</span> Ahmedabad, Gujarat, India
