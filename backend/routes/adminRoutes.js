@@ -5,7 +5,8 @@ const {
     getAdminStats,
     getAllUsers, toggleBlockUser, verifyUser,
     getAllListings, verifyListing,
-    getAllBookings, getAllPayments
+    getAllBookings, getAllPayments,
+    getPendingOwners, approveOwner, rejectOwner
 } = require('../controllers/adminController');
 
 // All routes require authentication and "admin" role
@@ -23,5 +24,10 @@ router.patch('/listings/:id/verify', verifyListing);
 
 router.get('/bookings', getAllBookings);
 router.get('/payments', getAllPayments);
+
+// Owner registration approval
+router.get('/pending-owners', getPendingOwners);
+router.patch('/owners/:id/approve', approveOwner);
+router.patch('/owners/:id/reject', rejectOwner);
 
 module.exports = router;

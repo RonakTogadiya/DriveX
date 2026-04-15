@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAdminStats, getAllUsers, toggleBlockUser, verifyUser, getAllListings, verifyListing, getAllBookings, getAllPayments } from '../services/api';
+import { getAdminStats, getAllUsers, toggleBlockUser, verifyUser, getAllListings, verifyListing, getAllBookings, getAllPayments, getPendingOwners, approveOwner, rejectOwner } from '../services/api';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip as ChartTooltip, Legend } from 'chart.js';
@@ -21,6 +21,7 @@ const AdminPanel = () => {
     const [listings, setListings] = useState([]);
     const [bookings, setBookings] = useState([]);
     const [payments, setPayments] = useState([]);
+    const [pendingOwners, setPendingOwners] = useState([]);
 
     useEffect(() => {
         if (!authLoading && (!user || user.role !== 'admin')) navigate('/');
@@ -59,12 +60,18 @@ const AdminPanel = () => {
         try { const { data } = await getAllPayments(); setPayments(data.data); } catch (err) { toast.error("Failed to load payments"); } finally { setLoading(false); }
     };
 
+    const loadPendingOwners = async () => {
+        setLoading(true);
+        try { const { data } = await getPendingOwners(); setPendingOwners(data.data); } catch (err) { toast.error("Failed to load pending owners"); } finally { setLoading(false); }
+    };
+
     useEffect(() => {
         if (activeTab === 'users') loadUsers();
         else if (activeTab === 'listings') loadListings();
         else if (activeTab === 'bookings') loadBookings();
         else if (activeTab === 'payments') loadPayments();
         else if (activeTab === 'overview') fetchOverview();
+        else if (activeTab === 'auth') loadPendingOwners();
     }, [activeTab]);
 
     // Handlers
@@ -78,10 +85,21 @@ const AdminPanel = () => {
         try { await verifyListing(id, status); loadListings(); toast.success(`Listing ${status.toLowerCase()}`); } catch (err) { toast.error('Failed to verify listing'); }
     };
 
+    const handleApproveOwner = async (id) => {
+        try { await approveOwner(id); loadPendingOwners(); toast.success('Owner account approved!'); } catch (err) { toast.error('Failed to approve owner'); }
+    };
+
+    const handleRejectOwner = async (id) => {
+        const reason = prompt('Reason for rejection:');
+        if (!reason) return;
+        try { await rejectOwner(id, reason); loadPendingOwners(); toast.success('Owner account rejected!'); } catch (err) { toast.error('Failed to reject owner'); }
+    };
+
     if (authLoading || !user) return null;
 
     const TABS = [
         { key: 'overview', label: 'Overview' },
+        { key: 'auth', label: 'AUTH (Verification)' },
         { key: 'users', label: 'Users' },
         { key: 'listings', label: 'Vehicles' },
         { key: 'bookings', label: 'Bookings' },
@@ -159,6 +177,46 @@ const AdminPanel = () => {
                                     </div>
                                 </div>
                             </>
+                        )}
+
+                        {/* AUTH (PENDING OWNERS) TAB */}
+                        {activeTab === 'auth' && (
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                {pendingOwners.length === 0 ? (
+                                    <div className="p-8 text-center text-slate-500">No pending owner registrations found.</div>
+                                ) : (
+                                    <table className="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr className="bg-slate-50 text-xs text-slate-500 uppercase">
+                                                <th className="p-4 border-b">User</th>
+                                                <th className="p-4 border-b">Contact</th>
+                                                <th className="p-4 border-b">Vehicle Info</th>
+                                                <th className="p-4 border-b text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-sm">
+                                            {pendingOwners.map(u => (
+                                                <tr key={u._id} className="border-b last:border-0 hover:bg-slate-50">
+                                                    <td className="p-4"><p className="font-semibold text-slate-800">{u.username}</p><p className="text-xs text-slate-500">{u.email}</p></td>
+                                                    <td className="p-4"><span className="text-slate-600 font-mono text-xs">{u.phone || 'N/A'}</span></td>
+                                                    <td className="p-4">
+                                                        {u.initialVehicle ? (
+                                                            <>
+                                                                <p className="font-semibold text-slate-800">{u.initialVehicle.name}</p>
+                                                                <p className="text-xs text-slate-500">{u.initialVehicle.brand} • {u.initialVehicle.year} • ₹{u.initialVehicle.pricePerDay}/day</p>
+                                                            </>
+                                                        ) : <span className="text-slate-400 italic">No details</span>}
+                                                    </td>
+                                                    <td className="p-4 text-right flex justify-end gap-2">
+                                                        <button onClick={() => handleApproveOwner(u._id)} className="text-xs font-semibold px-3 py-1.5 rounded bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors">Accept</button>
+                                                        <button onClick={() => handleRejectOwner(u._id)} className="text-xs font-semibold px-3 py-1.5 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors">Reject</button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
                         )}
 
                         {/* USERS TAB */}

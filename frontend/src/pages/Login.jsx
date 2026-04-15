@@ -35,11 +35,11 @@ const Login = () => {
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-1.5 mb-6">
                         <span className="text-emerald-600 font-bold text-2xl">Drive</span>
-                        <span className="text-slate-900 font-bold text-2xl">X</span>
+                        <span className="text-slate-900 font-bold text-2xl">Link</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                     </Link>
                     <h1 className="font-bold text-2xl text-slate-900">Sign In</h1>
-                    <p className="text-slate-500 text-sm mt-1">Access your DriveX account</p>
+                    <p className="text-slate-500 text-sm mt-1">Access your DriveLink account</p>
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
@@ -69,7 +69,7 @@ const Login = () => {
                         <div className="flex-1 h-px bg-gray-200" /><span className="text-slate-400 text-xs">OR</span><div className="flex-1 h-px bg-gray-200" />
                     </div>
                     <p className="text-center text-slate-500 text-sm">
-                        New to DriveX?{' '}
+                        New to DriveLink?{' '}
                         <Link to="/register" className="text-emerald-600 hover:underline font-semibold">Create Account →</Link>
                     </p>
                 </div>

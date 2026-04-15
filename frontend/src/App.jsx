@@ -19,6 +19,7 @@ import AdminPanel from './pages/AdminPanel';
 import Inbox from './pages/Inbox';
 import WishlistPage from './pages/WishlistPage';
 import PaymentPage from './pages/PaymentPage';
+import AboutUs from './pages/AboutUs';
 
 // ── Route Guards ───────────────────────────────────────────────────────
 const ProtectedRoute = ({ children, role }) => {
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ children, role }) => {
 
 const PlaceholderPage = ({ title }) => (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 pt-16 text-center px-4">
-        <p className="text-neon font-mono text-xs uppercase tracking-[0.4em]">DriveX</p>
+        <p className="text-neon font-mono text-xs uppercase tracking-[0.4em]">DriveLink</p>
         <h1 className="font-orbitron font-black text-4xl text-starlight uppercase">{title}</h1>
     </div>
 );
@@ -51,7 +52,7 @@ const AppRoutes = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/map" element={<MapSearch />} />
-            <Route path="/about" element={<PlaceholderPage title="How It Works" />} />
+            <Route path="/about" element={<AboutUs />} />
 
             {/* Protected: any logged-in user */}
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

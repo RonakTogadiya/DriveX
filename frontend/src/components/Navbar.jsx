@@ -33,9 +33,9 @@ const Navbar = () => {
     }, [location.pathname]);
 
     const navLinks = [
-        { to: '/listings', label: 'Browse Vehicles' },
-        { to: '/map', label: 'Map Search' },
-        { to: '/about', label: 'How It Works' },
+        { to: '/listings', label: 'Explore Vehicles' },
+        { to: '/map', label: 'Nearby Vehicle' },
+        { to: '/about', label: 'About Us' },
     ];
 
     const isActive = (path) => location.pathname === path;
@@ -87,7 +87,7 @@ const Navbar = () => {
                 {/* ── Brand ───────────────────────────────────────────── */}
                 <Link to="/" className="flex items-center gap-1.5">
                     <span className="text-emerald-600 font-bold text-xl tracking-tight">Drive</span>
-                    <span className="text-slate-900 font-bold text-xl tracking-tight">X</span>
+                    <span className="text-slate-900 font-bold text-xl tracking-tight">Link</span>
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-0.5" />
                 </Link>
 

@@ -30,6 +30,23 @@ const ListingDetail = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
+    // Dynamic date-overlap check instead of static isAvailable flag
+    const hasDateConflict = (() => {
+        if (!startDate || !endDate || !bookedDates.length) return false;
+        const selStart = new Date(startDate);
+        const selEnd = new Date(endDate);
+        selStart.setHours(0,0,0,0);
+        selEnd.setHours(23,59,59,999);
+        return bookedDates.some(b => {
+            if (b.status === 'CANCELLED' || b.status === 'COMPLETED') return false;
+            const bStart = new Date(b.startDate);
+            const bEnd = new Date(b.endDate);
+            bStart.setHours(0,0,0,0);
+            bEnd.setHours(23,59,59,999);
+            return selStart < bEnd && selEnd > bStart;
+        });
+    })();
+
     const totalDays = startDate && endDate ? differenceInCalendarDays(new Date(endDate), new Date(startDate)) : 0;
     
     let totalCost = 0;
@@ -103,7 +120,7 @@ const ListingDetail = () => {
                 {/* ── Breadcrumb ────────────────────────────────────────── */}
                 <div className="flex items-center gap-2 text-slate-400 text-sm mb-6">
                     <button onClick={() => navigate('/listings')} className="hover:text-emerald-600 transition-colors">
-                        ← Browse Vehicles
+                        ← Explore Vehicles
                     </button>
                     <span>/</span>
                     <span className="text-slate-700 font-medium truncate">{listing.name}</span>
@@ -287,13 +304,13 @@ const ListingDetail = () => {
                             )}
 
                             <button onClick={handleBooking}
-                                disabled={bookingLoading || !listing.isAvailable || totalDays < 1}
+                                disabled={bookingLoading || hasDateConflict || totalDays < 1}
                                 className="w-full mt-4 bg-emerald-600 text-white font-semibold text-sm py-3 rounded-xl
                                            hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed
                                            flex items-center justify-center gap-2">
                                 {bookingLoading
                                     ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Processing...</>
-                                    : !listing.isAvailable ? '⛔ Vehicle Unavailable' : '🚗 Book Now'}
+                                    : hasDateConflict ? '⛔ Dates Unavailable — Choose Different Dates' : totalDays < 1 ? '📅 Select Dates to Book' : '🚗 Book Now'}
                             </button>
 
                             {!user && (

@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard';
 import ListingForm from './pages/ListingForm';
 import MyListings from './pages/MyListings';
 import Inbox from './pages/Inbox';
+import AboutUs from './pages/AboutUs';
 
 // ── Lazy-load heavy pages (Leaflet + Chart.js) to prevent synchronous crash ──
 const MapSearch = lazy(() => import('./pages/MapSearch'));
@@ -36,7 +37,7 @@ const ProtectedRoute = ({ children, role }) => {
 
 const PlaceholderPage = ({ title }) => (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 pt-16 text-center px-4">
-        <p className="text-neon font-mono text-xs uppercase tracking-[0.4em]">DriveX</p>
+        <p className="text-neon font-mono text-xs uppercase tracking-[0.4em]">DriveLink</p>
         <h1 className="font-orbitron font-black text-4xl text-starlight uppercase">{title}</h1>
     </div>
 );
@@ -65,7 +66,7 @@ function App() {
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/map" element={<MapSearch />} />
-                            <Route path="/about" element={<PlaceholderPage title="How It Works" />} />
+                            <Route path="/about" element={<AboutUs />} />
 
                             {/* Protected */}
                             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

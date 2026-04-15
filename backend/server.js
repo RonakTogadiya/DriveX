@@ -120,7 +120,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 
 // --- Health Check ---
 app.get('/', (req, res) => {
-    res.json({ message: '🚀 DriveX Car Rental Platform API is live!' });
+    res.json({ message: '🚀 DriveLink Car Rental Platform API is live!' });
 });
 
 // --- Global Error Handler ---

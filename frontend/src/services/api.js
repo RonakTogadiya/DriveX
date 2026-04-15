@@ -54,6 +54,9 @@ export const getAllListings = () => api.get('/admin/listings');
 export const verifyListing = (id, status) => api.patch(`/admin/listings/${id}/verify`, { status });
 export const getAllBookings = () => api.get('/admin/bookings');
 export const getAllPayments = () => api.get('/admin/payments');
+export const getPendingOwners = () => api.get('/admin/pending-owners');
+export const approveOwner = (id) => api.patch(`/admin/owners/${id}/approve`);
+export const rejectOwner = (id, reason) => api.patch(`/admin/owners/${id}/reject`, { reason });
 
 // ── Notifications ─────────────────────────────────────────────────────
 export const getNotifications = () => api.get('/notifications');

@@ -1,5 +1,5 @@
 /**
- * DriveX Seed Script
+ * DriveLink Seed Script
  * Populates MongoDB with users, vehicle listings, and bookings (booked + available)
  * Run: node backend/seed.js
  */
@@ -17,12 +17,12 @@ const MONGO_OPTIONS = {
 
 // ── Test Users ─────────────────────────────────────────────────────────
 const USERS = [
-    { username: 'adminuser', email: 'admin@drivex.com', passwordHash: 'Admin@123', password: 'Admin@123', role: 'admin', phone: '0000000000' },
-    { username: 'rahulsharma', email: 'rahul@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'owner', phone: '9876543210' },
-    { username: 'priyajoshi', email: 'priya@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'owner', phone: '9876543211' },
-    { username: 'amitmehta', email: 'amit@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543212' },
-    { username: 'snehaverma', email: 'sneha@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543213' },
-    { username: 'vikramaditya', email: 'vikram@drivex.com', passwordHash: 'DriveX@123', password: 'DriveX@123', role: 'renter', phone: '9876543214' },
+    { username: 'adminuser', email: 'admin@drivelink.com', passwordHash: 'DriveLink@123', password: 'DriveLink@123', role: 'admin', phone: '0000000000' },
+    { username: 'rahulsharma', email: 'rahul@drivelink.com', passwordHash: 'DriveLink@123', password: 'DriveLink@123', role: 'owner', phone: '9876543210' },
+    { username: 'priyajoshi', email: 'priya@drivelink.com', passwordHash: 'DriveLink@123', password: 'DriveLink@123', role: 'owner', phone: '9876543211' },
+    { username: 'amitmehta', email: 'amit@drivelink.com', passwordHash: 'DriveLink@123', password: 'DriveLink@123', role: 'renter', phone: '9876543212' },
+    { username: 'snehaverma', email: 'sneha@drivelink.com', passwordHash: 'DriveLink@123', password: 'DriveLink@123', role: 'renter', phone: '9876543213' },
+    { username: 'vikramaditya', email: 'vikram@drivelink.com', passwordHash: 'DriveLink@123', password: 'DriveLink@123', role: 'renter', phone: '9876543214' },
 ];
 
 // ── Vehicle Listings ───────────────────────────────────────────────────
@@ -154,7 +154,7 @@ const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); retur
 const daysFromNow = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d; };
 
 async function seed() {
-    console.log('\n🚀 DriveX Seed Script Starting...\n');
+    console.log('\n🚀 DriveLink Seed Script Starting...\n');
 
     try {
         console.log('🔌 Connecting to MongoDB...');
@@ -173,7 +173,7 @@ async function seed() {
         const createdUsers = [];
         for (const u of USERS) {
             const user = await User.create({ ...u, isVerified: true });
-            console.log(`👤 Created ${u.role}: ${u.username} (${u.email}) | password: DriveX@123`);
+            console.log(`👤 Created ${u.role}: ${u.username} (${u.email}) | password: DriveLink@123`);
             createdUsers.push(user);
         }
 
@@ -312,11 +312,11 @@ async function seed() {
         console.log(`   📋 ${bookings.length} bookings (2 ACTIVE, 1 CONFIRMED, 2 COMPLETED, 1 CANCELLED, 1 PENDING)`);
         console.log(`   👤 ${USERS.length} users (1 admin, 2 owners, 3 renters)\n`);
         console.log('🔑 Test Login Credentials:');
-        console.log('   Admin:  admin@drivex.com  / Admin@123');
-        console.log('   Owner:  rahul@drivex.com  / DriveX@123');
-        console.log('   Owner:  priya@drivex.com  / DriveX@123');
-        console.log('   Renter: amit@drivex.com   / DriveX@123');
-        console.log('   Renter: sneha@drivex.com  / DriveX@123');
+        console.log('   Admin:  admin@drivelink.com  / DriveLink@123');
+        console.log('   Owner:  rahul@drivelink.com  / DriveLink@123');
+        console.log('   Owner:  priya@drivelink.com  / DriveLink@123');
+        console.log('   Renter: amit@drivelink.com   / DriveLink@123');
+        console.log('   Renter: sneha@drivelink.com  / DriveLink@123');
         console.log('═══════════════════════════════════════════════════════\n');
 
         process.exit(0);

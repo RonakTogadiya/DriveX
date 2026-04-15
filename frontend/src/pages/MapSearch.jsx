@@ -63,7 +63,7 @@ const MapSearch = () => {
             {/* ── Top bar ──────────────────────────────────────────────────── */}
             <div className="flex items-center justify-between px-4 py-3 bg-matte border-b border-gray-800 z-10 relative">
                 <div>
-                    <p className="text-neon font-mono text-[10px] uppercase tracking-[0.3em]">◈ DriveX</p>
+                    <p className="text-neon font-mono text-[10px] uppercase tracking-[0.3em]">◈ DriveLink</p>
                     <h1 className="font-orbitron font-bold text-lg text-starlight uppercase leading-tight">Map Vehicle Search</h1>
                 </div>
 

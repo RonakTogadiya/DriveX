@@ -24,6 +24,11 @@ const UserSchema = new mongoose.Schema(
             enum: ['renter', 'owner', 'admin'],
             default: 'renter',
         },
+        approvalStatus: {
+            type: String,
+            enum: ['APPROVED', 'PENDING', 'REJECTED'],
+            default: 'APPROVED',
+        },
         isBlocked: { type: Boolean, default: false },
 
         // ── Profile details ───────────────────────────────────────────────
@@ -40,6 +45,17 @@ const UserSchema = new mongoose.Schema(
 
         // Wishlist
         wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Listing' }],
+
+        // Initial vehicle for owner registration (admin review)
+        initialVehicle: {
+            name: { type: String },
+            brand: { type: String },
+            model: { type: String },
+            year: { type: Number },
+            type: { type: String },
+            fuelType: { type: String },
+            pricePerDay: { type: Number },
+        },
     },
     { timestamps: true }
 );

@@ -314,7 +314,7 @@ const downloadReceipt = async (req, res, next) => {
         
         doc.pipe(res);
 
-        doc.fontSize(20).text('DriveX Rental Receipt', { align: 'center' });
+        doc.fontSize(20).text('DriveLink Rental Receipt', { align: 'center' });
         doc.moveDown();
 
         doc.fontSize(12);
@@ -342,7 +342,7 @@ const downloadReceipt = async (req, res, next) => {
         doc.text(`Rental Paid: ${booking.rentalPaid ? 'Yes' : 'No'}`);
         doc.moveDown();
 
-        doc.fontSize(10).text('Thank you for choosing DriveX!', { align: 'center' });
+        doc.fontSize(10).text('Thank you for choosing DriveLink!', { align: 'center' });
 
         doc.end();
     } catch (err) {

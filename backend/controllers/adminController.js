@@ -101,7 +101,7 @@ const verifyUser = async (req, res, next) => {
             await sendNotification(
                 user._id,
                 'USER_VERIFIED',
-                'Your account has been verified! You can now list vehicles on DriveX.',
+                'Your account has been verified! You can now list vehicles on DriveLink.',
                 user._id
             );
         }
@@ -148,7 +148,7 @@ const verifyListing = async (req, res, next) => {
         if (listing.owner && (status === 'APPROVED' || status === 'REJECTED')) {
             const notifType = status === 'APPROVED' ? 'LISTING_APPROVED' : 'LISTING_REJECTED';
             const notifMessage = status === 'APPROVED'
-                ? `Your vehicle "${listing.name}" has been approved and is now live on DriveX!`
+                ? `Your vehicle "${listing.name}" has been approved and is now live on DriveLink!`
                 : `Your vehicle "${listing.name}" has been rejected by admin. Please review and resubmit.`;
 
             await sendNotification(
@@ -199,6 +199,99 @@ const getAllPayments = async (req, res, next) => {
     }
 };
 
+/**
+ * @desc    Get pending owner registrations
+ * @route   GET /api/admin/pending-owners
+ * @access  Private (admin)
+ */
+const getPendingOwners = async (req, res, next) => {
+    try {
+        const pendingOwners = await User.find({ role: 'owner', approvalStatus: 'PENDING' })
+            .select('-passwordHash')
+            .sort({ createdAt: -1 });
+        res.json({ success: true, count: pendingOwners.length, data: pendingOwners });
+    } catch (err) {
+        next(err);
+    }
+};
+
+/**
+ * @desc    Approve an owner registration (creates their first vehicle listing)
+ * @route   PATCH /api/admin/owners/:id/approve
+ * @access  Private (admin)
+ */
+const approveOwner = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+        if (user.role !== 'owner') return res.status(400).json({ success: false, message: 'User is not an owner' });
+        if (user.approvalStatus === 'APPROVED') return res.status(400).json({ success: false, message: 'Owner is already approved' });
+
+        user.approvalStatus = 'APPROVED';
+        user.isVerified = true;
+        await user.save();
+
+        // Auto-create the first vehicle listing from initialVehicle data
+        if (user.initialVehicle && user.initialVehicle.name) {
+            await Listing.create({
+                name: user.initialVehicle.name,
+                brand: user.initialVehicle.brand || 'Unknown',
+                model: user.initialVehicle.model || 'Unknown',
+                year: user.initialVehicle.year || new Date().getFullYear(),
+                type: user.initialVehicle.type || 'CAR',
+                fuelType: user.initialVehicle.fuelType || 'PETROL',
+                pricePerDay: user.initialVehicle.pricePerDay || 1000,
+                description: `Vehicle listed by ${user.username} upon registration approval.`,
+                owner: user._id,
+                isAvailable: true,
+                verificationStatus: 'APPROVED',
+            });
+        }
+
+        // Send notification
+        await sendNotification(
+            user._id,
+            'USER_VERIFIED',
+            'Congratulations! Your owner account has been approved. You can now log in and manage your vehicles on DriveLink.',
+            user._id
+        );
+
+        res.json({ success: true, message: 'Owner approved successfully', data: user });
+    } catch (err) {
+        next(err);
+    }
+};
+
+/**
+ * @desc    Reject an owner registration
+ * @route   PATCH /api/admin/owners/:id/reject
+ * @access  Private (admin)
+ */
+const rejectOwner = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+        if (user.role !== 'owner') return res.status(400).json({ success: false, message: 'User is not an owner' });
+
+        user.approvalStatus = 'REJECTED';
+        await user.save();
+
+        const reason = req.body.reason || 'Your registration did not meet our requirements.';
+
+        // Send notification
+        await sendNotification(
+            user._id,
+            'LISTING_REJECTED',
+            `Your owner registration has been rejected. Reason: ${reason}`,
+            user._id
+        );
+
+        res.json({ success: true, message: 'Owner registration rejected', data: user });
+    } catch (err) {
+        next(err);
+    }
+};
+
 module.exports = {
     getAdminStats,
     getAllUsers,
@@ -207,5 +300,8 @@ module.exports = {
     getAllListings,
     verifyListing,
     getAllBookings,
-    getAllPayments
+    getAllPayments,
+    getPendingOwners,
+    approveOwner,
+    rejectOwner
 };

@@ -34,7 +34,13 @@ const getListings = async (req, res, next) => {
         const query = { ...queryStr };
 
         if (search) {
-            query.$text = { $search: search };
+            const searchRegex = { $regex: search, $options: 'i' };
+            query.$or = [
+                { name: searchRegex },
+                { brand: searchRegex },
+                { model: searchRegex },
+                { 'location.city': searchRegex },
+            ];
         }
         if (type) query.type = type;
         if (fuelType) query.fuelType = fuelType;

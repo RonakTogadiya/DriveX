@@ -58,7 +58,7 @@ const SearchResults = () => {
 
                 {/* ── Hero ──────────────────────────────────────────────── */}
                 <div className="text-center mb-10">
-                    <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-2">DriveX Marketplace</p>
+                    <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-2">DriveLink Marketplace</p>
                     <h1 className="font-bold text-4xl md:text-5xl text-slate-900">
                         Find Your <span className="text-emerald-600">Ride</span>
                     </h1>

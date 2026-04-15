@@ -10,24 +10,57 @@ const ROLES = [
 ];
 
 const Register = () => {
-    const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '', role: 'renter', phone: '' });
+    const [form, setForm] = useState({ 
+        username: '', email: '', password: '', confirmPassword: '', role: 'renter', phone: '',
+        vName: '', vBrand: '', vModel: '', vYear: new Date().getFullYear(), vType: 'CAR', vFuel: 'PETROL', vPrice: '' 
+    });
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    const handlePhoneChange = (e) => {
+        const val = e.target.value.replace(/\D/g, '').substring(0, 10);
+        setForm(p => ({ ...p, phone: val }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (form.password !== form.confirmPassword) return toast.error('Passwords do not match');
         if (form.password.length < 6) return toast.error('Password must be at least 6 characters');
+        if (form.phone.length !== 10) return toast.error('Phone number must be exactly 10 digits');
         setLoading(true);
         try {
-            const { data } = await registerApi({ username: form.username, email: form.email, password: form.password, role: form.role, phone: form.phone });
+            const payload = {
+                username: form.username,
+                email: form.email,
+                password: form.password,
+                role: form.role,
+                phone: `+91${form.phone}`
+            };
+            
+            if (form.role === 'owner') {
+                payload.initialVehicle = {
+                    name: form.vName,
+                    brand: form.vBrand,
+                    model: form.vModel,
+                    year: Number(form.vYear),
+                    type: form.vType,
+                    fuelType: form.vFuel,
+                    pricePerDay: Number(form.vPrice)
+                };
+            }
+            
+            const { data } = await registerApi(payload);
             if (data.success) {
-                login(data.data, data.data.token);
-                toast.success(`Welcome to DriveX, ${form.username}!`);
-                navigate('/listings');
+                if (data.pendingApproval) {
+                    toast.success(data.message || 'Registration submitted! Admin will review your account.', { duration: 5000 });
+                    navigate('/login');
+                } else {
+                    login(data.data, data.data.token);
+                    toast.success(`Welcome to DriveLink, ${form.username}!`);
+                    navigate('/listings');
+                }
             }
         } catch (err) {
             toast.error(err.response?.data?.message || 'Registration failed');
@@ -42,11 +75,11 @@ const Register = () => {
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-1.5 mb-6">
                         <span className="text-emerald-600 font-bold text-2xl">Drive</span>
-                        <span className="text-slate-900 font-bold text-2xl">X</span>
+                        <span className="text-slate-900 font-bold text-2xl">Link</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                     </Link>
                     <h1 className="font-bold text-2xl text-slate-900">Create Account</h1>
-                    <p className="text-slate-500 text-sm mt-1">Join the DriveX platform</p>
+                    <p className="text-slate-500 text-sm mt-1">Join the DriveLink platform</p>
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
@@ -71,19 +104,50 @@ const Register = () => {
                         </div>
 
                         {/* Fields */}
-                        {[
-                            { id: 'username', label: 'Full Name / Username', placeholder: 'e.g. John Doe', type: 'text' },
-                            { id: 'email', label: 'Email Address', placeholder: 'you@email.com', type: 'email' },
-                            { id: 'phone', label: 'Phone Number', placeholder: '+91 9876543210', type: 'tel' },
-                        ].map(({ id, label, placeholder, type }) => (
-                            <div key={id} className="flex flex-col gap-1.5">
-                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider" htmlFor={id}>{label}</label>
-                                <input id={id} name={id} type={type} value={form[id]} onChange={handleChange} placeholder={placeholder}
-                                    required={id !== 'phone'}
-                                    className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400
-                             focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name / Username</label>
+                            <input name="username" value={form.username} onChange={handleChange} required placeholder="e.g. John Doe"
+                                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Address</label>
+                            <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="you@email.com"
+                                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Phone Number</label>
+                            <div className="flex">
+                                <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-600 text-sm font-bold">
+                                    +91
+                                </span>
+                                <input name="phone" type="tel" value={form.phone} onChange={handlePhoneChange} required placeholder="9876543210" minLength={10} maxLength={10}
+                                    className="flex-1 bg-slate-50 border border-slate-200 rounded-r-xl px-4 py-3 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
                             </div>
-                        ))}
+                        </div>
+
+                        {form.role === 'owner' && (
+                            <div className="p-5 mt-2 border-2 border-emerald-500/20 bg-emerald-50/50 rounded-xl space-y-4">
+                                <div>
+                                    <h3 className="text-emerald-800 font-bold text-sm tracking-wide uppercase">Your Vehicle Details</h3>
+                                    <p className="text-xs text-emerald-600/80 mt-1">Required for vendor approval. You can add more later.</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <input name="vName" value={form.vName} onChange={handleChange} required placeholder="Vehicle Name (e.g. Swift LXI)" className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-slate-400" />
+                                    <input name="vBrand" value={form.vBrand} onChange={handleChange} required placeholder="Brand (e.g. Maruti)" className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-slate-400" />
+                                    <input name="vModel" value={form.vModel} onChange={handleChange} required placeholder="Model (e.g. Swift)" className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-slate-400" />
+                                    <input name="vYear" type="number" min="2000" max={new Date().getFullYear() + 1} value={form.vYear} onChange={handleChange} required placeholder="Year" className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-slate-400" />
+                                </div>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <select name="vType" value={form.vType} onChange={handleChange} required className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all">
+                                        <option value="CAR">Car</option><option value="SUV">SUV</option><option value="BIKE">Bike</option><option value="SCOOTER">Scooter</option>
+                                    </select>
+                                    <select name="vFuel" value={form.vFuel} onChange={handleChange} required className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all">
+                                        <option value="PETROL">Petrol</option><option value="DIESEL">Diesel</option><option value="ELECTRIC">Electric</option>
+                                    </select>
+                                    <input name="vPrice" type="number" min="100" value={form.vPrice} onChange={handleChange} required placeholder="₹/Day" className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-slate-400" />
+                                </div>
+                            </div>
+                        )}
 
                         <div className="grid grid-cols-2 gap-3">
                             {['password', 'confirmPassword'].map((id) => (
