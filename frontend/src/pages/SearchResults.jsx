@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getListings } from '../services/api';
 import VehicleCard from '../components/VehicleCard';
+import Footer from '../components/Footer';
 
 const VEHICLE_TYPES = ['CAR', 'BIKE', 'SUV', 'TRUCK', 'VAN', 'SCOOTER'];
 const FUEL_TYPES = ['PETROL', 'DIESEL', 'ELECTRIC', 'HYBRID', 'CNG'];
@@ -171,6 +172,11 @@ const SearchResults = () => {
                         </button>
                     </div>
                 )}
+            </div>
+            
+            {/* Added Footer directly to the end of Explore Vehicles page as requested */}
+            <div className="mt-16 -mx-4 -mb-16">
+                <Footer />
             </div>
         </div>
     );

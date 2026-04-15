@@ -4,7 +4,6 @@ import { Toaster } from 'react-hot-toast';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
-
 // ── Pages ──────────────────────────────────────────────────────────────
 import SearchResults from './pages/SearchResults';
 import Login from './pages/Login';
@@ -42,8 +41,9 @@ const PlaceholderPage = ({ title }) => (
 );
 
 const AppRoutes = () => (
-    <>
+    <div className="flex flex-col min-h-screen">
         <Navbar />
+        <main className="flex-grow">
         <Routes>
             {/* Public */}
             <Route path="/" element={<SearchResults />} />
@@ -81,7 +81,8 @@ const AppRoutes = () => (
             {/* 404 */}
             <Route path="*" element={<PlaceholderPage title="404 — Page Not Found" />} />
         </Routes>
-    </>
+        </main>
+    </div>
 );
 
 function App() {
