@@ -31,42 +31,42 @@ const VEHICLES = [
         ownerIdx: 1, name: 'Maruti Swift 2023', type: 'CAR', brand: 'Maruti Suzuki', model: 'Swift',
         year: 2023, seats: 5, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 1200, weekendPrice: 1500,
         mileage: 15000, description: 'Well-maintained Maruti Swift, perfect for city commuting.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/159099/swift-exterior-right-front-three-quarter.jpeg',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/54399/swift-exterior-right-front-three-quarter-63.jpeg?q=80',  
         location: { address: 'Andheri West', city: 'Mumbai', country: 'India', coordinates: { type: 'Point', coordinates: [72.8362, 19.1364] } },
     },
     {
         ownerIdx: 1, name: 'Honda City 2022', type: 'CAR', brand: 'Honda', model: 'City',
         year: 2022, seats: 5, fuelType: 'PETROL', transmission: 'AUTOMATIC', pricePerDay: 1800, weekendPrice: 2200,
         mileage: 20000, description: 'Premium sedan with excellent mileage and comfort.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/134287/city-exterior-right-front-three-quarter-2.jpeg',
+        imageUrl: 'https://vroomhead.com/wp-content/uploads/2023/03/Ar_Vk_Honda-City_3TX_Front-3-4th-Studio-Shot_Golden-Brown-Metallic_V2-1-1024x683.jpg',
         location: { address: 'Bandra East', city: 'Mumbai', country: 'India', coordinates: { type: 'Point', coordinates: [72.8520, 19.0596] } },
     },
     {
         ownerIdx: 1, name: 'Bajaj Pulsar NS200', type: 'BIKE', brand: 'Bajaj', model: 'Pulsar NS200',
         year: 2023, seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 600, weekendPrice: 750,
         mileage: 8000, description: 'Sporty bike, great for weekend rides.',
-        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/174943/pulsar-ns200-right-side-view.jpeg',
+        imageUrl: 'https://www.bikeleague.in/wp-content/uploads/2023/08/NS-200-1.jpg',       
         location: { address: 'MG Road', city: 'Jaipur', country: 'India', coordinates: { type: 'Point', coordinates: [75.7873, 26.9124] } },
     },
     {
         ownerIdx: 1, name: 'Royal Enfield Classic 350', type: 'BIKE', brand: 'Royal Enfield', model: 'Classic 350',
         year: 2022, seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 800, weekendPrice: 1000,
         mileage: 12000, description: 'Iconic cruiser bike for long highway trips.',
-        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/161917/classic-350-right-side-view-2.jpeg',
+        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/1/versions/--redditch1738919737719.jpg?q=80',
         location: { address: 'Koregaon Park', city: 'Pune', country: 'India', coordinates: { type: 'Point', coordinates: [73.8930, 18.5367] } },
     },
     {
         ownerIdx: 1, name: 'Mahindra Thar 2023', type: 'SUV', brand: 'Mahindra', model: 'Thar',
         year: 2023, seats: 4, fuelType: 'DIESEL', transmission: 'MANUAL', pricePerDay: 3500, weekendPrice: 4500,
         mileage: 5000, description: 'Off-road beast, perfect for adventure trips.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter-49.jpeg',
+        imageUrl: 'https://cdn-s3.autocarindia.com/Mahindra/thar/OP709550.JPG?w=640',
         location: { address: 'Sector 17', city: 'Chandigarh', country: 'India', coordinates: { type: 'Point', coordinates: [76.7794, 30.7415] } },
     },
     {
         ownerIdx: 1, name: 'Tata Nexon EV 2023', type: 'SUV', brand: 'Tata', model: 'Nexon EV',
         year: 2023, seats: 5, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', pricePerDay: 2000, weekendPrice: 2500,
         mileage: 10000, description: 'Electric SUV with 300km range. Eco-friendly choice!',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/141867/nexon-ev-exterior-right-front-three-quarter-3.jpeg',
+        imageUrl: 'https://images.hindustantimes.com/auto/img/2023/09/08/1600x900/2023_Tata_Nexon_EV_Facelift_new_1694104161565_1694160092028.jpg',
         location: { address: 'T. Nagar', city: 'Chennai', country: 'India', coordinates: { type: 'Point', coordinates: [80.2340, 13.0409] } },
     },
 
@@ -75,14 +75,14 @@ const VEHICLES = [
         ownerIdx: 2, name: 'Hero Splendor Plus', type: 'BIKE', brand: 'Hero', model: 'Splendor Plus',
         year: 2023, seats: 2, fuelType: 'PETROL', transmission: 'MANUAL', pricePerDay: 350, weekendPrice: 450,
         mileage: 5000, description: 'India\'s most trusted commuter bike. Excellent mileage.',
-        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/124399/splendor-plus-right-side-view.jpeg',
+        imageUrl: 'https://cdn.bikedekho.com/processedimages/hero/splendor-plus-xtec/source/splendor-plus-xtec69721125c4bff.jpg?imwidth=412&impolicy=resize',
         location: { address: 'Hazratganj', city: 'Lucknow', country: 'India', coordinates: { type: 'Point', coordinates: [80.9500, 26.8554] } },
     },
     {
         ownerIdx: 2, name: 'Ola S1 Pro (Scooter)', type: 'SCOOTER', brand: 'Ola Electric', model: 'S1 Pro',
         year: 2023, seats: 2, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', pricePerDay: 400, weekendPrice: 550,
         mileage: 3000, description: 'Premium electric scooter with 170km range.',
-        imageUrl: 'https://imgd.aeplcdn.com/1056x594/n/cw/ec/121591/s1-pro-right-side-view.jpeg',
+        imageUrl: 'https://catalog-management.s3.ap-south-1.amazonaws.com/htmobile1/olaelectric_s1-pro/images/exterior_olaelectric-s1-pro_front-left-view_600x400.jpg',
         location: { address: 'Indiranagar', city: 'Bengaluru', country: 'India', coordinates: { type: 'Point', coordinates: [77.6408, 12.9784] } },
     },
     {
@@ -96,7 +96,7 @@ const VEHICLES = [
         ownerIdx: 2, name: 'Tata Nexon EV 2023', type: 'SUV', brand: 'Tata', model: 'Nexon EV',
         year: 2023, seats: 5, fuelType: 'ELECTRIC', transmission: 'AUTOMATIC', pricePerDay: 2200, weekendPrice: 2800,
         mileage: 6000, description: 'Electric SUV with great range and futuristic design.',
-        imageUrl: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/141867/nexon-ev-exterior-right-front-three-quarter-3.jpeg',
+        imageUrl: 'https://images.hindustantimes.com/auto/img/2023/09/08/1600x900/2023_Tata_Nexon_EV_Facelift_new_1694104161565_1694160092028.jpg',
         location: { address: 'Anna Nagar', city: 'Chennai', country: 'India', coordinates: { type: 'Point', coordinates: [80.2090, 13.0857] } },
     },
     {
@@ -151,15 +151,15 @@ const generateBlockedDates = (startDaysFromNow, endDaysFromNow) => {
 };
 
 async function seed() {
-    console.log('\n🚀 DriveLink Seed Script Starting...\n');
+    console.log('\n DriveLink Seed Script Starting...\n');
 
     try {
-        console.log('🔌 Connecting to MongoDB...');
+        console.log(' Connecting to MongoDB...');
         await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 10000, family: 4 });
-        console.log('✅ Connected!\n');
+        console.log('Connected!\n');
 
         // ── Cleanup ──────────────────────────────────────────────────────
-        console.log('🗑  Clearing existing data...');
+        console.log('Clearing existing data...');
         await Promise.all([
             User.deleteMany({}),
             Listing.deleteMany({}),
@@ -167,20 +167,20 @@ async function seed() {
             Notification.deleteMany({}),
             Message.deleteMany({}),
         ]);
-        console.log('✅ Collections cleared\n');
+        console.log('Collections cleared\n');
 
         // ── Users ────────────────────────────────────────────────────────
-        console.log('👤 Creating users...');
+        console.log('Creating users...');
         const createdUsers = [];
         for (const u of USERS) {
             const user = await User.create({ ...u, isVerified: true });
-            console.log(`   👤 Created ${u.role}: ${u.username} (${u.email}) | password: DriveLink@123`);
+            console.log(` Created ${u.role}: ${u.username} (${u.email}) | password: DriveLink@123`);
             createdUsers.push(user);
         }
         console.log('');
 
         // ── Listings ─────────────────────────────────────────────────────
-        console.log('🚗 Creating vehicle listings...');
+        console.log(' Creating vehicle listings...');
         const createdListings = [];
         for (const v of VEHICLES) {
             const { ownerIdx, ...vehicleData } = v;
@@ -192,13 +192,13 @@ async function seed() {
                 verificationStatus: 'APPROVED',
                 blockedDates: [],
             });
-            console.log(`   🚗 ${listing.name} (${listing.type}) → owner: ${USERS[ownerIdx].username} | ₹${listing.pricePerDay}/day`);
+            console.log(`   ${listing.name} (${listing.type}) → owner: ${USERS[ownerIdx].username} | ₹${listing.pricePerDay}/day`);
             createdListings.push(listing);
         }
         console.log('');
 
         // ── Bookings ─────────────────────────────────────────────────────
-        console.log('📅 Creating bookings...');
+        console.log('Creating bookings...');
         const bookings = [];
         for (const tmpl of BOOKING_TEMPLATES) {
             const listing = createdListings[tmpl.vehicleIdx];
@@ -243,17 +243,17 @@ async function seed() {
                 await Listing.findByIdAndUpdate(listing._id, { isAvailable: false });
             }
 
-            console.log(`   📅 ${listing.name} → ${USERS[tmpl.renterIdx].username} | ${tmpl.status} | ${totalDays} days | ₹${totalCost}`);
+            console.log(`   ${listing.name} → ${USERS[tmpl.renterIdx].username} | ${tmpl.status} | ${totalDays} days | ₹${totalCost}`);
         }
 
         // ── Summary ──────────────────────────────────────────────────────
         console.log('\n═══════════════════════════════════════════════════════');
-        console.log('✅ SEED COMPLETE');
+        console.log(' SEED COMPLETE');
         console.log('═══════════════════════════════════════════════════════');
-        console.log(`   🚗 ${createdListings.length} vehicle listings (all APPROVED + ACTIVE)`);
-        console.log(`   📅 ${bookings.length} bookings (2 ACTIVE, 1 CONFIRMED, 2 COMPLETED, 1 CANCELLED, 1 PENDING)`);
-        console.log(`   👤 ${USERS.length} users (1 admin, 2 owners, 3 renters)\n`);
-        console.log('🔑 Test Login Credentials:');
+        console.log(`    ${createdListings.length} vehicle listings (all APPROVED + ACTIVE)`);
+        console.log(`    ${bookings.length} bookings (2 ACTIVE, 1 CONFIRMED, 2 COMPLETED, 1 CANCELLED, 1 PENDING)`);
+        console.log(`    ${USERS.length} users (1 admin, 2 owners, 3 renters)\n`);
+        console.log('Test Login Credentials:');
         console.log('   Admin:  admin@drivelink.com  / DriveLink@123');
         console.log('   Owner:  rahul@drivelink.com  / DriveLink@123');
         console.log('   Owner:  priya@drivelink.com  / DriveLink@123');
@@ -263,7 +263,7 @@ async function seed() {
 
         process.exit(0);
     } catch (err) {
-        console.error('\n❌ Seed failed:', err.message);
+        console.error('\n Seed failed:', err.message);
         console.error(err.stack);
         process.exit(1);
     }

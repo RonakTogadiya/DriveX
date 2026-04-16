@@ -8,7 +8,7 @@ const Footer = () => {
                 {/* Brand & Project Info */}
                 <div className="space-y-4">
                     <h2 className="text-2xl font-black text-white font-orbitron uppercase tracking-wider">
-                        DriveLink
+                        Drive Link
                     </h2>
                     <p className="text-slate-400 text-sm leading-relaxed">
                         Your premium car rental and sharing platform. Find your perfect ride or share your vehicle with the community seamlessly.
@@ -47,7 +47,7 @@ const Footer = () => {
             </div>
             
             <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; {new Date().getFullYear()} DriveLink Platform. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} Drive Link Platform. All rights reserved.</p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                     <Link to="#" className="text-slate-400 hover:text-emerald-400 transition-colors" aria-label="Instagram">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">

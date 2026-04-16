@@ -36,7 +36,7 @@ const io = new Server(httpServer, {
 global.io = io; // Export io to be used in controllers
 
 io.on('connection', (socket) => {
-    console.log(`⚡ User connected: ${socket.id}`);
+    console.log(` User connected: ${socket.id}`);
 
     socket.on('register', (userId) => {
         if (userId) {
@@ -90,7 +90,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log(`🔌 User disconnected: ${socket.id}`);
+        console.log(` User disconnected: ${socket.id}`);
         // Remove from online users
         for (let [userId, sockId] of global.onlineUsers.entries()) {
             if (sockId === socket.id) {
@@ -120,7 +120,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 
 // --- Health Check ---
 app.get('/', (req, res) => {
-    res.json({ message: '🚀 DriveLink Car Rental Platform API is live!' });
+    res.json({ message: 'DriveLink Car Rental Platform API is live!' });
 });
 
 // --- Global Error Handler ---
@@ -134,5 +134,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

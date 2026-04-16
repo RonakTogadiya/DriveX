@@ -1,11 +1,7 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
-/**
- * @desc    Register a new user
- * @route   POST /api/auth/register
- * @access  Public
- */
+
 const registerUser = async (req, res, next) => {
     try {
         const { username, email, password, role, phone, initialVehicle } = req.body;

@@ -17,11 +17,7 @@ const sendNotification = async (userId, type, message, relatedId) => {
     }
 };
 
-/**
- * @desc    Get dashboard statistics for admin
- * @route   GET /api/admin/stats
- * @access  Private (admin)
- */
+
 const getAdminStats = async (req, res, next) => {
     try {
         const totalUsers = await User.countDocuments();
@@ -50,11 +46,7 @@ const getAdminStats = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get all users
- * @route   GET /api/admin/users
- * @access  Private (admin)
- */
+
 const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find().select('-password').sort({ createdAt: -1 });
@@ -64,11 +56,7 @@ const getAllUsers = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Toggle block status of a user
- * @route   PATCH /api/admin/users/:id/block
- * @access  Private (admin)
- */
+
 const toggleBlockUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
@@ -83,11 +71,7 @@ const toggleBlockUser = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Toggle verification status of a user document
- * @route   PATCH /api/admin/users/:id/verify
- * @access  Private (admin)
- */
+
 const verifyUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
@@ -112,11 +96,7 @@ const verifyUser = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get all listings (including pending/rejected)
- * @route   GET /api/admin/listings
- * @access  Private (admin)
- */
+
 const getAllListings = async (req, res, next) => {
     try {
         const listings = await Listing.find().populate('owner', 'username email').sort({ createdAt: -1 });
@@ -126,11 +106,7 @@ const getAllListings = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Verify or reject a listing
- * @route   PATCH /api/admin/listings/:id/verify
- * @access  Private (admin)
- */
+
 const verifyListing = async (req, res, next) => {
     try {
         const { status } = req.body; // 'APPROVED' or 'REJECTED'
@@ -165,11 +141,7 @@ const verifyListing = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get all bookings
- * @route   GET /api/admin/bookings
- * @access  Private (admin)
- */
+
 const getAllBookings = async (req, res, next) => {
     try {
         const bookings = await Booking.find()
@@ -182,11 +154,7 @@ const getAllBookings = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get all payments
- * @route   GET /api/admin/payments
- * @access  Private (admin)
- */
+
 const getAllPayments = async (req, res, next) => {
     try {
         const payments = await Payment.find()
@@ -199,11 +167,7 @@ const getAllPayments = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get pending owner registrations
- * @route   GET /api/admin/pending-owners
- * @access  Private (admin)
- */
+
 const getPendingOwners = async (req, res, next) => {
     try {
         const pendingOwners = await User.find({ role: 'owner', approvalStatus: 'PENDING' })
@@ -215,11 +179,7 @@ const getPendingOwners = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Approve an owner registration (creates their first vehicle listing)
- * @route   PATCH /api/admin/owners/:id/approve
- * @access  Private (admin)
- */
+
 const approveOwner = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
@@ -262,11 +222,7 @@ const approveOwner = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Reject an owner registration
- * @route   PATCH /api/admin/owners/:id/reject
- * @access  Private (admin)
- */
+
 const rejectOwner = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
